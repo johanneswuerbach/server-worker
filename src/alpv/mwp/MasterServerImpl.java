@@ -93,21 +93,14 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 		Thread mergeObserver = new Thread(new Runnable() {
 			public void run() {
 				try {
-					while (argumentPool.size() > 0) { // wait for last task
-														// execution
+					while (argumentPool.size() > 0) {
+						System.out.println("Observer: arguments.size() = "
+								+ argumentPool.size());
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							// ignore
 						}
-					}
-					try {
-						Thread.sleep(1000); // wait for last result because the
-											// ugly interface does not support
-											// status notifications about the
-											// status of the workers
-					} catch (InterruptedException e) {
-						// ignore
 					}
 					System.out.println("Observer: start merging");
 					job.merge(resultPool);

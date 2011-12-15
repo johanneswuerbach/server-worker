@@ -42,10 +42,13 @@ public class Main {
 			} else
 				throw new IllegalArgumentException();
 		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
 			System.err.println(USAGE);
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			System.err.println(USAGE);
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 			System.err.println(USAGE);
 		} catch (RemoteException e) {
 			e.printStackTrace();

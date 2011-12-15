@@ -10,7 +10,7 @@ public class PowJob extends JobImpl<Integer, Integer, Integer> {
 	private static final long serialVersionUID = 267504255130640656L;
 	private Integer[] _numbers;
 
-	public PowJob(Integer[] numbers) {
+	public PowJob(Integer[] numbers) throws RemoteException {
 		super();
 		_task = new PowTask();
 		_numbers = numbers;

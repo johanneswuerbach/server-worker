@@ -8,11 +8,10 @@ public abstract class JobImpl<Argument, Result, ReturnObject> implements
 	protected Argument _argument;
 	protected RemoteFutureImpl<ReturnObject> _remoteFuture;
 
-	public JobImpl() {
-		_remoteFuture = new RemoteFutureImpl<ReturnObject>();
-	}
-
 	public RemoteFuture<ReturnObject> getFuture() {
+		if (_remoteFuture == null) {
+			_remoteFuture = new RemoteFutureImpl<ReturnObject>();
+		}
 		return _remoteFuture;
 	}
 
