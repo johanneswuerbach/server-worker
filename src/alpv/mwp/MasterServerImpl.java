@@ -40,8 +40,7 @@ public class MasterServerImpl implements Master, Server, Serializable {
 		while (true) {
 			System.out.println("running");
 			try {
-			String line = br.readLine();
-			if (line.equals("q")) {
+			if (br.readLine().equals("q")) {
 				System.out.println("bye");
 				break;
 			}
@@ -71,13 +70,38 @@ public class MasterServerImpl implements Master, Server, Serializable {
 
 	@Override
 	public <Argument, Result, ReturnObject> RemoteFuture<ReturnObject> doJob(
-			Job<Argument, Result, ReturnObject> job) throws RemoteException {
-		PoolImpl<Argument> argumentPool = new PoolImpl<Argument>();
+			final Job<Argument, Result, ReturnObject> job) throws RemoteException {
+		final PoolImpl<Argument> argumentPool = new PoolImpl<Argument>();
 		job.split(argumentPool, _numberOfWorkers);
-		PoolImpl<Result> resultPool = new PoolImpl<Result>();
+		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
 		for (Worker w : _workers) {
 			w.start(job.getTask(), argumentPool, resultPool);
 		}
+		
+		/** start the merge observer*/
+		Thread mergeObserver = new Thread(new Runnable() {
+			public void run() {
+				try {
+					while (argumentPool.size()>0){
+							System.out.println("Observer: arguments.size() = " + argumentPool.size());
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								//ignore
+							}
+					}
+					System.out.println("Observer: start merging");
+					job.merge(resultPool);
+					System.out.println("Observer: Merged.");
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				} 
+			}
+		});
+		mergeObserver.start();
+		/** ********** */
+		
 		return job.getFuture();
 	}
 }
+

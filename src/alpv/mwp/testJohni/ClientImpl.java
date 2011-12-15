@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpv.mwp.Job;
-import alpv.mwp.Master;
+import alpv.mwp.JobImpl;
 import alpv.mwp.RemoteFuture;
 import alpv.mwp.Server;
 
@@ -26,7 +26,7 @@ public class ClientImpl {
 		numbers.add(22);
 		numbers.add(222);
 		numbers.add(2222);
-		Job<List<Integer>,Integer,Integer> job = new JobAdd(numbers);
+		JobImpl<List<Integer>,Integer,Integer> job = new JobAdd(numbers);
 		try {
 			RemoteFuture<Integer> remoteFuture = _server.doJob(job);
 			System.out.println(remoteFuture.get());

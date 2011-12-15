@@ -5,32 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpv.mwp.Job;
+import alpv.mwp.JobImpl;
 import alpv.mwp.Pool;
 import alpv.mwp.RemoteFuture;
 import alpv.mwp.Task;
 
-public class JobAdd implements Job<List<Integer>, Integer, Integer> {
+public class JobAdd extends JobImpl<List<Integer>, Integer, Integer> {
 
 	private static final long serialVersionUID = 267504255130640656L;
-	private TaskAdd _task;
 	private List<Integer> _numbers;
-	RemoteFuture<Integer> _remoteFuture;
 	private Integer _result;
 
 	public JobAdd(List<Integer> numbers) {
 		_task = new TaskAdd();
 		_numbers = numbers;
-		_remoteFuture = new RemoteFutureImpl(this);
-	}
-
-	@Override
-	public TaskAdd getTask() {
-		return _task;
-	}
-
-	@Override
-	public RemoteFuture<Integer> getFuture() {
-		return _remoteFuture;
 	}
 
 	@Override
