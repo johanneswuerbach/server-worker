@@ -17,7 +17,7 @@ public class WorkerImpl implements Worker, Runnable, Serializable {
 
 	public WorkerImpl(String host, int port) throws RemoteException,
 			NotBoundException {
-		System.out.println("Worker: looking for server "+host+":"+port);
+		System.out.println("Worker: looking for server " + host + ":" + port);
 		Registry registry = LocateRegistry.getRegistry(host, port);
 		_master = (Master) (registry.lookup("mwp"));
 		_master.registerWorker(this);
@@ -27,19 +27,19 @@ public class WorkerImpl implements Worker, Runnable, Serializable {
 		System.out.print("Worker: running");
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			while (_isRunning) {
-				try {
+		while (_isRunning) {
+			try {
 				String line = br.readLine();
 				if (line.startsWith("q")) {
 					_master.unregisterWorker(this);
 					_isRunning = false;
 					br.close();
 					System.out.println("Worker: bye");
-				}}
-				catch (IOException e) {
-					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} 
+		}
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class WorkerImpl implements Worker, Runnable, Serializable {
 		 */
 		public void run() {
 			try {
-				for (Argument argument = _argumentPool.get(); argument != null && _isRunning; argument = _argumentPool
-						.get()) {
+				for (Argument argument = _argumentPool.get(); argument != null
+						&& _isRunning; argument = _argumentPool.get()) {
 					_resultPool.put(_task.exec(argument));
 				}
 			} catch (RemoteException e) {

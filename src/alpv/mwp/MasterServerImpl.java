@@ -13,11 +13,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterServerImpl extends UnicastRemoteObject implements Master, Server, Serializable {
+public class MasterServerImpl extends UnicastRemoteObject implements Master,
+		Server, Serializable {
 
 	private static final long serialVersionUID = 5199119579575954593L;
 	private static final String NAME = "mwp";
-	
+
 	private final Registry _registry;
 	private final int _numberOfWorkers;
 	private final List<Worker> _workers;
@@ -28,7 +29,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master, Ser
 		_numberOfWorkers = numberOfWorkers;
 		_registry = LocateRegistry.createRegistry(port);
 		_registry.rebind(NAME, this);
-		
+
 		_workers = new ArrayList<Worker>();
 		try {
 			String address = (InetAddress.getLocalHost()).toString();
@@ -45,13 +46,13 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master, Ser
 			System.out.println("running");
 			try {
 				String line = br.readLine();
-			if (line.equals("q")) {
-				System.out.println("bye");
-				break;
-			}
-			else if (line.equals("s")) {
-				System.out.println("I have " + _workers.size() + " workers.");
-			}
+				if (line.equals("q")) {
+					System.out.println("bye");
+					break;
+				} else if (line.equals("s")) {
+					System.out.println("I have " + _workers.size()
+							+ " workers.");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -78,7 +79,8 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master, Ser
 
 	@Override
 	public <Argument, Result, ReturnObject> RemoteFuture<ReturnObject> doJob(
-			final Job<Argument, Result, ReturnObject> job) throws RemoteException {
+			final Job<Argument, Result, ReturnObject> job)
+			throws RemoteException {
 		final PoolImpl<Argument> argumentPool = new PoolImpl<Argument>();
 		job.split(argumentPool, _numberOfWorkers);
 		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
@@ -86,31 +88,29 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master, Ser
 		for (Worker w : _workers) {
 			w.start(job.getTask(), argumentPool, resultPool);
 		}
-		
-		/** start the merge observer*/
+
+		/** start the merge observer */
 		Thread mergeObserver = new Thread(new Runnable() {
 			public void run() {
 				try {
-					while (argumentPool.size()>0){
-							System.out.println("Observer: arguments.size() = " + argumentPool.size());
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								//ignore
-							}
+					while (argumentPool.size() > 0) {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// ignore
+						}
 					}
 					System.out.println("Observer: start merging");
 					job.merge(resultPool);
 					System.out.println("Observer: Merged.");
 				} catch (RemoteException e) {
 					e.printStackTrace();
-				} 
+				}
 			}
 		});
 		mergeObserver.start();
 		/** ********** */
-		
+
 		return job.getFuture();
 	}
 }
-

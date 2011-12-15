@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import alpv.mwp.JobImpl;
 import alpv.mwp.Pool;
 
-
 public class PowJob extends JobImpl<Integer, Integer, Integer> {
 
 	private static final long serialVersionUID = 267504255130640656L;
@@ -13,9 +12,9 @@ public class PowJob extends JobImpl<Integer, Integer, Integer> {
 
 	public PowJob(Integer[] numbers) {
 		super();
+		_task = new PowTask();
 		_numbers = numbers;
 	}
-
 
 	@Override
 	public void split(Pool<Integer> argPool, int workerCount) {
@@ -30,16 +29,15 @@ public class PowJob extends JobImpl<Integer, Integer, Integer> {
 
 	@Override
 	public void merge(Pool<Integer> resPool) {
+		Integer result = 0;
 		try {
-			Integer sum = 0;
 			Integer i;
 			while ((i = resPool.get()) != null) {
-				sum += i;
+				result += i;
 			}
-			_result = sum;
 		} catch (RemoteException e) {
 			// ignore
 		}
-		_remoteFuture.setReturnObject(_result);
+		_remoteFuture.setReturnObject(result);
 	}
 }
