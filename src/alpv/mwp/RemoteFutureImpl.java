@@ -1,9 +1,11 @@
 package alpv.mwp;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class RemoteFutureImpl<ReturnObject> implements RemoteFuture<ReturnObject>{
+public class RemoteFutureImpl<ReturnObject> implements RemoteFuture<ReturnObject>, Serializable{
 	
+	private static final long serialVersionUID = -3480527838775572272L;
 	ReturnObject _returnObject;
 	boolean _ready;
 	
