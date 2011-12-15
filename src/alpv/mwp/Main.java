@@ -21,6 +21,9 @@ public class Main {
 		
 		try {
 			int i = 0;
+			if(args.length == 0) {
+				throw new IllegalArgumentException();
+			}
 
 			if(args[i].equals("server")) {
 				new MasterServerImpl( Integer.parseInt(args[++i]), Integer.parseInt(args[++i]));
@@ -38,15 +41,12 @@ public class Main {
 				throw new IllegalArgumentException();
 		}
 		catch(ArrayIndexOutOfBoundsException e) {
-			e.printStackTrace();
 			System.err.println(USAGE);
 		}
 		catch(NumberFormatException e) {
-			e.printStackTrace();
 			System.err.println(USAGE);
 		}
 		catch(IllegalArgumentException e) {
-			e.printStackTrace();
 			System.err.println(USAGE);
 		} catch (RemoteException e) {
 			e.printStackTrace();
