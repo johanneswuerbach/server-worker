@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE scene SYSTEM "scene.dtd">
+<Scene renderer="StdRenderer" width="800" height="800">
+<Camera>
+    <LookAt eye="0.0, 0.0, 17.0" reference="0.0, 0.0, 0.0" up="0.0, 1.0, 0.0"/>
+</Camera>
+<Background color="0.2, 0.2, 0.3"/>
+<PointLight color="1.0, 1.0, 1.0" location="-11.0, 11.0, 11.0"/>
+<PointLight color="1.0, 1.0, 1.0" location="11.0, 11.0, 11.0"/>
+<SolidMarble
+    diffuse="1.0"
+    blendColor="0.0, 0.0, 0.0" turbulence="0.6" squeeze="0.1">
+    <Transform>
+        <Scale value="0.2, 0.2, 0.2"/>
+    </Transform>
+</SolidMarble>
+<Polygon color="0.2, 0.2, 0.3">
+    <Vertices>
+    -30.0, -30.0, -15.0,
+    -30.0, 30.0, -15.0,
+    30.0, 30.0, -15.0,
+    30.0, -30.0, -15.0
+    </Vertices>
+</Polygon>
+<Aggregate>
+    <Transform>
+        <Rotate axis="1, 0, 0" angle="150"/>
+        <Rotate axis="0, 1, 0" angle="150"/>
+    </Transform>
+    <Plastic diffuse="0.4" specular="0.6" roughness="0.01"/>
+<Csg operation="union" color="0.8, 0.8, 0.8">
+  <Csg operation="union">
+    <Csg operation="union">
+    <Csg operation="union">
+      <Csg operation="union">
+        <Csg operation="union">
+          <Csg operation="union">
+            <Csg operation="union">
+              <Csg operation="subtract">
+                <Csg operation="subtract">
+                  <Csg operation="subtract">
+                    <Csg operation="union">
+                      <Csg operation="union">
+                        <Csg operation="subtract">
+                          <Csg operation="subtract">
+                             <Csg operation="union">
+                                <Cylinder top="0, 0, 0.79992" base="0, 0, -0.79992" radius="9"/>
+                                <Cone top="0, 0, 7.6" topRadius="1.0" base="0, 0, 2.6" baseRadius="2.0"/>
+                             </Csg>
+                             <Box vertex1="3.0, -4.0, 0.8" vertex2="9.0, 7.0, -0.8"/>
+                          </Csg>
+                          <Box vertex1="-3.0, -4.0, 0.8" vertex2="-9.0, 7.0, -0.8"/>
+                        </Csg>
+                        <Csg operation="subtract">
+                           <Box vertex1="-3.0, -4.0, 0.81" vertex2="4.1, -2.9, -0.81"/>
+                           <Cylinder top="4, -3, 0.96" base="4, -3, -0.96" radius="1"/>
+                        </Csg>
+                      </Csg>
+                      <Csg operation="subtract">
+                         <Box vertex1="-3.0, -4.0, 0.81" vertex2="-4.1, -2.9, -0.81"/>
+                         <Cylinder top="-4, -3, 0.96" base="-4, -3, -0.96" radius="1"/>
+                      </Csg>
+                  </Csg>
+                  <Box vertex1="6.245, -5.625, 0.88" vertex2="9.1, -3.9, -0.88"/>
+                </Csg>
+                <Box vertex1="-6.245, -5.625, 0.88" vertex2="-9.1, -3.9, -0.88"/>
+              </Csg>
+              <Box vertex1="-8.0, 6.0, 0.81" vertex2="8.0, 10.0, -0.81"/>
+            </Csg>
+            <Cylinder top="6.245, -5.0, 0.8" base="6.245, -5, -0.8" radius="1"/>
+         </Csg>
+         <Cylinder top="-6.245, -5.0, 0.8" base="-6.245, -5, -0.8" radius="1"/>
+       </Csg>
+       <Cylinder top="0, 6, 0.8" base="0, 6, -0.8" radius="3"/>
+     </Csg>
+     <Cylinder top="0, 0, 0.8" base="0, 0, 2.6" radius="2"/>
+   </Csg>
+   <Cylinder top="0, 0, 7.6" base="0, 0, 8.6" radius="1"/>
+   </Csg>
+      <Csg operation="subtract">
+        <Cylinder top="0, 0, 0.75" base="0, 0, 1.1" radius="2.3"/>
+        <Aggregate>
+          <Transform>
+            <Translate value="0, 0, 1.1"/>
+          </Transform>
+          <Torus ringRadius="2.3" pipeRadius="0.3"/>
+        </Aggregate>
+      </Csg>
+    </Csg>
+    <Cylinder top="0, 6, -0.8" base="0, 6, -4.3" radius="2"/>
+  </Csg>
+  <Csg operation="subtract">
+    <Cylinder top="0, 6, -1.1" base="0, 6, -0.75" radius="2.3"/>
+    <Aggregate>
+      <Transform>
+        <Translate value="0, 6, -1.1"/>
+      </Transform>
+      <Torus ringRadius="2.3" pipeRadius="0.3"/>
+    </Aggregate>
+  </Csg>
+</Csg>
+</Aggregate>
+</Scene>
