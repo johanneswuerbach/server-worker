@@ -46,12 +46,14 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			System.out.println("running");
 			try {
 				String line = br.readLine();
-				if (line.equals("q")) {
-					System.out.println("bye");
-					break;
-				} else if (line.equals("s")) {
-					System.out.println("I have " + _workers.size()
-							+ " workers.");
+				if (line != null) {
+					if (line.equals("q")) {
+						System.out.println("bye");
+						break;
+					} else if (line.equals("s")) {
+						System.out.println("I have " + _workers.size()
+								+ " workers.");
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

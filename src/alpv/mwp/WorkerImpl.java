@@ -30,7 +30,7 @@ public class WorkerImpl implements Worker, Runnable, Serializable {
 		while (_isRunning) {
 			try {
 				String line = br.readLine();
-				if (line.startsWith("q")) {
+				if (line != null && line.startsWith("q")) {
 					_master.unregisterWorker(this);
 					_isRunning = false;
 					br.close();
