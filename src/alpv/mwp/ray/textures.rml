@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!DOCTYPE scene SYSTEM "scene.dtd">
+<Scene renderer="StdRenderer" width="400" height="400">
+<Camera>
+    <LookAt eye="0, 0, 5" reference="0, 0, 0" up="0.0, 1.0, 0.0"/>
+</Camera>
+<Background color="0.0, 0.2, 0.2"/>
+<PointLight location="0, 0, 10" color="0.9, 0.9, 0.9"/>
+<Plastic diffuse="0.2" specular="0.2" roughness="0.14" reflectance="0.8"/>
+<Polygon color="0.3, 0.7, 0.2">
+    <Vertices>
+	-50, -50, -50,
+	 50, -50, -50,
+	 50,  50, -50,
+	-50,  50, -50
+    </Vertices>
+</Polygon>
+<Plastic ambient="0.3" diffuse="0.2" specular="0.7" roughness="0.02"/>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="30"/>
+	    <Rotate axis="0, 0, 1" angle="30"/>
+        <Translate value="-4, 4, 0"/>
+    </Transform>
+    <Cone color="1, 1, 1" baseRadius="1" top="0, 1, 0" base="0, -1, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="30"/>
+	    <Rotate axis="0, 0, 1" angle="30"/>
+        <Translate value="-4, 2, 0"/>
+    </Transform>
+    <Sphere color="1, 1, 1" radius="1" center="0, 0, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="30"/>
+	    <Rotate axis="0, 0, 1" angle="30"/>
+        <Translate value="-4, 0, 0"/>
+    </Transform>
+    <Box color="1, 1, 1" vertex1="-1, -1, -1" vertex2="1, 1, 1"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="30"/>
+	    <Rotate axis="0, 0, 1" angle="30"/>
+        <Translate value="-4, -2, 0"/>
+    </Transform>
+    <Torus color="1, 1, 1" ringRadius="0.9" pipeRadius="0.4"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="30"/>
+	    <Rotate axis="0, 0, 1" angle="30"/>
+        <Translate value="-4, -4, 0"/>
+    </Transform>
+    <SuperQuadric color="1, 1, 1" order="1" vertex1="-1.3, -1.3, -1.3" vertex2="1.3, 1.3, 1.3"/>
+</Aggregate>
+<SolidMarble
+    ambient="0.3" diffuse="0.3" specular="0.6" roughness="0.1"
+    blendColor="0.3, 0.3, 0.3" turbulence="0.1" squeeze="0.3">
+</SolidMarble>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="20"/>
+	    <Rotate axis="0, 0, 1" angle="20"/>
+        <Translate value="-2, 4, 0"/>
+    </Transform>
+    <Cone color="1, 1, 1" baseRadius="1" top="0, 1, 0" base="0, -1, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="20"/>
+	    <Rotate axis="0, 0, 1" angle="20"/>
+        <Translate value="-2, 2, 0"/>
+    </Transform>
+    <Sphere color="1, 1, 1" radius="1" center="0, 0, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="20"/>
+	    <Rotate axis="0, 0, 1" angle="20"/>
+        <Translate value="-2, 0, 0"/>
+    </Transform>
+    <Box color="1, 1, 1" vertex1="-1, -1, -1" vertex2="1, 1, 1"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="20"/>
+	    <Rotate axis="0, 0, 1" angle="20"/>
+        <Translate value="-2, -2, 0"/>
+    </Transform>
+    <Torus color="1, 1, 1" ringRadius="0.9" pipeRadius="0.4"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="20"/>
+	    <Rotate axis="0, 0, 1" angle="20"/>
+        <Translate value="-2, -4, 0"/>
+    </Transform>
+    <SuperQuadric color="1, 1, 1" order="1" vertex1="-1.3, -1.3, -1.3" vertex2="1.3, 1.3, 1.3"/>
+</Aggregate>
+<SolidWood
+    ambient="0.3" diffuse="0.3" specular="0.6" roughness="0.1"
+    blendColor="0.6, 0.5, 0.3" turbulence="0.6" squeeze="0.5">
+    <Transform>
+        <Translate value="5, 5, 5"/>
+        <Rotate axis="0, 0, 1" angle="30"/>
+        <Rotate axis="1, 0, 0" angle="30"/>
+        <Scale value="0.06666, 0.06666, 0.06666"/>
+    </Transform>
+</SolidWood>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="40"/>
+	    <Rotate axis="0, 0, 1" angle="40"/>
+        <Translate value="0, 4, 0"/>
+    </Transform>
+    <Cone color="0.9, 0.75, 0.45" baseRadius="1" top="0, 1, 0" base="0, -1, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="40"/>
+	    <Rotate axis="0, 0, 1" angle="40"/>
+        <Translate value="0, 2, 0"/>
+    </Transform>
+    <Sphere color="0.9, 0.75, 0.45" radius="1" center="0, 0, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="40"/>
+	    <Rotate axis="0, 0, 1" angle="40"/>
+        <Translate value="0, 0, 0"/>
+    </Transform>
+    <Box color="0.9, 0.75, 0.45" vertex1="-1, -1, -1" vertex2="1, 1, 1"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="40"/>
+	    <Rotate axis="0, 0, 1" angle="40"/>
+        <Translate value="0, -2, 0"/>
+    </Transform>
+    <Torus color="0.9, 0.75, 0.45" ringRadius="0.9" pipeRadius="0.4"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="40"/>
+	    <Rotate axis="0, 0, 1" angle="40"/>
+        <Translate value="0, -4, 0"/>
+    </Transform>
+    <SuperQuadric color="0.9, 0.75, 0.45" order="1" vertex1="-1.3, -1.3, -1.3" vertex2="1.3, 1.3, 1.3"/>
+</Aggregate>
+<SolidMarble
+    ambient="0.3" diffuse="0.3" specular="0.6" roughness="0.1"
+    blendColor="0.3, 0.3, 0.3" turbulence="0.6" squeeze="0.1">
+</SolidMarble>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="50"/>
+	    <Rotate axis="0, 0, 1" angle="50"/>
+        <Translate value="2, 4, 0"/>
+    </Transform>
+    <Cone color="1, 1, 1" baseRadius="1" top="0, 1, 0" base="0, -1, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="50"/>
+	    <Rotate axis="0, 0, 1" angle="50"/>
+        <Translate value="2, 2, 0"/>
+    </Transform>
+    <Sphere color="1, 1, 1" radius="1" center="0, 0, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="50"/>
+	    <Rotate axis="0, 0, 1" angle="50"/>
+        <Translate value="2, 0, 0"/>
+    </Transform>
+    <Box color="1, 1, 1" vertex1="-1, -1, -1" vertex2="1, 1, 1"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="50"/>
+	    <Rotate axis="0, 0, 1" angle="50"/>
+        <Translate value="2, -2, 0"/>
+    </Transform>
+    <Torus color="1, 1, 1" ringRadius="0.9" pipeRadius="0.4"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="50"/>
+	    <Rotate axis="0, 0, 1" angle="50"/>
+        <Translate value="2, -4, 0"/>
+    </Transform>
+    <SuperQuadric color="1, 1, 1" order="1" vertex1="-1.3, -1.3, -1.3" vertex2="1.3, 1.3, 1.3"/>
+</Aggregate>
+<SolidWood
+    ambient="0.3" diffuse="0.3" specular="0.6" roughness="0.1"
+    blendColor="0.6, 0.5, 0.3" turbulence="0.3" squeeze="0.5">
+    <Transform>
+        <Translate value="5, 5, 5"/>
+        <Rotate axis="0, 0, 1" angle="30"/>
+        <Rotate axis="1, 0, 0" angle="30"/>
+        <Scale value="0.06666, 0.06666, 0.06666"/>
+    </Transform>
+</SolidWood>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="60"/>
+	    <Rotate axis="0, 0, 1" angle="60"/>
+        <Translate value="4, 4, 0"/>
+    </Transform>
+    <Cone color="0.815, 0.5, 0.278" baseRadius="1" top="0, 1, 0" base="0, -1, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="60"/>
+	    <Rotate axis="0, 0, 1" angle="60"/>
+        <Translate value="4, 2, 0"/>
+    </Transform>
+    <Sphere color="0.815, 0.5, 0.278" radius="1" center="0, 0, 0"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="60"/>
+	    <Rotate axis="0, 0, 1" angle="60"/>
+        <Translate value="4, 0, 0"/>
+    </Transform>
+    <Box color="0.815, 0.5, 0.278" vertex1="-1, -1, -1" vertex2="1, 1, 1"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="60"/>
+	    <Rotate axis="0, 0, 1" angle="60"/>
+        <Translate value="4, -2, 0"/>
+    </Transform>
+    <Torus color="0.815, 0.5, 0.278" ringRadius="0.9" pipeRadius="0.4"/>
+</Aggregate>
+<Aggregate>
+    <Transform>
+	    <Rotate axis="1, 0, 0" angle="60"/>
+	    <Rotate axis="0, 0, 1" angle="60"/>
+        <Translate value="4, -4, 0"/>
+    </Transform>
+    <SuperQuadric color="0.815, 0.5, 0.278" order="1" vertex1="-1.3, -1.3, -1.3" vertex2="1.3, 1.3, 1.3"/>
+</Aggregate>
+</Scene>
