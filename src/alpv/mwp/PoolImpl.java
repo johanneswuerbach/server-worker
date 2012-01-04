@@ -13,6 +13,7 @@ public class PoolImpl<T> implements Pool<T> {
 	private final static int CAPACITY = 200;
 
 	public PoolImpl() {
+		super();
 		_queue = new ArrayBlockingQueue<T>(CAPACITY);
 	}
 

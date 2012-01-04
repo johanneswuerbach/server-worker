@@ -3,6 +3,7 @@ package alpv.mwp;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import alpv.mwp.ray.RayClient;
 import alpv.mwp.testOne.PowClient;
 
 public class Main {
@@ -31,7 +32,7 @@ public class Main {
 				new MasterServerImpl(Integer.parseInt(args[++i]),
 						Integer.parseInt(args[++i]));
 			} else if (args[i].equals("client")) {
-				PowClient client = new PowClient(args[++i],
+				RayClient client = new RayClient(args[++i],
 						Integer.parseInt(args[++i]));
 				client.execute();
 			} else if (args[i].equals("worker")) {

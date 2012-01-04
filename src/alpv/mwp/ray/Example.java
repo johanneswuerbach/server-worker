@@ -35,7 +35,7 @@ class Example
 
         // set render windows
         rendfe1.setWindowStrip(0,400);
-        rendfe2.setWindowStrip(401,800);
+        rendfe2.setWindowStrip(401,801);
 
         try {
             // render the two strips concurrently
@@ -68,6 +68,7 @@ class Example
             // save picture
 
             // write header
+            System.out.println("width "+rendfe1.getImageWidth() + "height " + rendfe1.getImageHeight()+ rendfe2.getImageHeight());
             String hdr = "RGB\n" + rendfe1.getImageWidth()+" "+
             (rendfe1.getImageHeight()+rendfe2.getImageHeight()) +
                 " 8 8 8\n";
