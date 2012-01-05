@@ -4,7 +4,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import alpv.mwp.ray.RayClient;
-import alpv.mwp.testOne.PowClient;
 
 public class Main {
 	private static final String USAGE = String

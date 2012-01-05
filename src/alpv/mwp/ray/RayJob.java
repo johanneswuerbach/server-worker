@@ -1,30 +1,27 @@
 package alpv.mwp.ray;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 import java.util.PriorityQueue;
 
-import alpv.mwp.JobImpl;
+import alpv.mwp.Job;
 import alpv.mwp.Pool;
 
-public class RayJob extends JobImpl<Integer, RayResult, Boolean> {
+public class RayJob implements Job<Integer, RayResult, RayComplete> {
 
 	private static final long serialVersionUID = 5288048324055927759L;
 	public static final int THREAD_NUMBER_OF_LINES = 40;
-	private static final int HEIGHT = 800; // see Example
-	private static final int WIDTH = 800; // see Example
-	
-	public RayJob(){
+	public static final int HEIGHT = 800; // see Example
+	public static final int WIDTH = 800; // see Example
+	protected RayTask _task;
+	protected Integer _argument;
+	protected RayRemoteFuture _remoteFuture;
+
+	public RayJob() throws RemoteException {
 		_task = new RayTask();
+		_remoteFuture = new RayRemoteFuture();
 	}
 
 	@Override
@@ -40,50 +37,42 @@ public class RayJob extends JobImpl<Integer, RayResult, Boolean> {
 
 	@Override
 	public void merge(Pool<RayResult> resPool) {
-		try {
-			// temporary File for the result picture
-			File outF = File.createTempFile("alpiv", ".pix");
-			OutputStream outs = new FileOutputStream(outF);
+		_remoteFuture.set(collect(resPool));
+	}
 
-			writeHeader(outs);
+	private RayComplete collect(Pool<RayResult> resPool) {
+
+		ByteArrayOutputStream baos = null;
+
+		try {
+			// collect files
+			baos = new ByteArrayOutputStream();
 
 			// write data parts
 			RayResult result;
-			PriorityQueue<RayResult> results = new PriorityQueue<RayResult>(resPool.size());
+			PriorityQueue<RayResult> results = new PriorityQueue<RayResult>(
+					resPool.size());
 			while ((result = resPool.get()) != null) {
 				results.add(result);
 			}
-			while((result = results.poll()) != null){
+			while ((result = results.poll()) != null) {
 				ByteArrayOutputStream outputStream = result.getStream();
-				outputStream.writeTo(outs);
+				outputStream.writeTo(baos);
 				outputStream.flush();
 			}
 
-			// done with writing
-			outs.close();
-
-			showPicture(outF);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		_remoteFuture.setReturnObject(true);
+		return new RayComplete(baos, true);
 	}
 
-	private void writeHeader(OutputStream outs) throws IOException {
-		String hdr = "RGB\n" + WIDTH + " " + HEIGHT + " 8 8 8\n";
-		BufferedWriter wOut = new BufferedWriter(new OutputStreamWriter(
-				outs));
-		wOut.write(hdr, 0, hdr.length());
-		wOut.flush();
+	public RayRemoteFuture getFuture() {
+		return _remoteFuture;
 	}
 
-	private void showPicture(File outF) {
-		try {
-			// rendfe1.showPicture(outF.getCanonicalPath());
-			GUI.display(outF.getCanonicalPath());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		outF.delete();
+	public RayTask getTask() {
+		return _task;
 	}
+
 }

@@ -1,5 +1,11 @@
 package alpv.mwp.ray;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -22,11 +28,51 @@ public class RayClient {
 
 	public void execute() {
 		try {
-			Job<Integer, RayResult, Boolean> job = new RayJob();
+			Job<Integer, RayResult, RayComplete> job = new RayJob();
 
-			RemoteFuture<Boolean> remoteFuture = _server.doJob(job);
-			System.out.println(remoteFuture.get());
+			RemoteFuture<RayComplete> remoteFuture = _server
+					.doJob(job);
+
+			showPicture(remoteFuture);
+			
 		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void showPicture(RemoteFuture<RayComplete> remoteFuture) {
+		
+		System.out.println("Show picture.");
+
+		try {
+			RayComplete complete;
+			File outF = File.createTempFile("alpiv", ".pix");
+			OutputStream outs = new FileOutputStream(outF);
+			
+			do {
+				complete = remoteFuture.get();
+				
+				// write header
+				String hdr = "RGB\n" + RayJob.WIDTH + " " + RayJob.HEIGHT
+						+ " 8 8 8\n";
+				BufferedWriter wOut = new BufferedWriter(
+						new OutputStreamWriter(outs));
+				wOut.write(hdr, 0, hdr.length());
+				wOut.flush();
+
+				// write strips
+				complete.getStream().writeTo(outs);
+				complete.getStream().flush();
+
+				// done with writing
+				outs.close();
+
+				GUI.display(outF.getCanonicalPath());
+				
+			} while(!complete.isFinished());
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

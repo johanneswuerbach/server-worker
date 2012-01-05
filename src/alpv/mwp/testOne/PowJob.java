@@ -2,18 +2,21 @@ package alpv.mwp.testOne;
 
 import java.rmi.RemoteException;
 
-import alpv.mwp.JobImpl;
+import alpv.mwp.Job;
 import alpv.mwp.Pool;
+import alpv.mwp.Task;
 
-public class PowJob extends JobImpl<Integer, Integer, Integer> {
+public class PowJob implements Job<Integer, Integer, Integer> {
 
 	private static final long serialVersionUID = 267504255130640656L;
 	private Integer[] _numbers;
-
+	protected PowTask _task;
+	protected Integer _argument;
+	protected PowRemoteFuture _remoteFuture;
 	public PowJob(Integer[] numbers) throws RemoteException {
-		super();
 		_task = new PowTask();
 		_numbers = numbers;
+		_remoteFuture = new PowRemoteFuture();
 	}
 
 	@Override
@@ -26,6 +29,14 @@ public class PowJob extends JobImpl<Integer, Integer, Integer> {
 			}
 		}
 	}
+	
+	public PowRemoteFuture getFuture() {
+		return _remoteFuture;
+	}
+
+	public Task<Integer, Integer> getTask() {
+		return _task;
+	}
 
 	@Override
 	public void merge(Pool<Integer> resPool) {
@@ -35,9 +46,10 @@ public class PowJob extends JobImpl<Integer, Integer, Integer> {
 			while ((i = resPool.get()) != null) {
 				result += i;
 			}
+			_remoteFuture.set(result);
 		} catch (RemoteException e) {
 			// ignore
 		}
-		_remoteFuture.setReturnObject(result);
+		
 	}
 }

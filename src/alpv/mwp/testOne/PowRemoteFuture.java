@@ -1,21 +1,23 @@
-package alpv.mwp;
+package alpv.mwp.testOne;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class RemoteFutureImpl<ReturnObject> implements
-		RemoteFuture<ReturnObject>, Serializable {
+import alpv.mwp.RemoteFuture;
+
+public class PowRemoteFuture implements
+		RemoteFuture<Integer>, Serializable {
 
 	private static final long serialVersionUID = -3480527838775572272L;
-	ReturnObject _returnObject;
+	Integer _returnObject;
 	boolean _ready;
 
-	public RemoteFutureImpl() {
+	public PowRemoteFuture() {
 		_returnObject = null;
 		_ready = false;
 	}
 
-	public ReturnObject get() throws RemoteException {
+	public Integer get() throws RemoteException {
 		while (!_ready) {
 			try {
 				Thread.sleep(500);
@@ -26,7 +28,7 @@ public class RemoteFutureImpl<ReturnObject> implements
 		return _returnObject;
 	}
 
-	public void setReturnObject(ReturnObject returnObject) {
+	public void set(Integer returnObject) {
 		_returnObject = returnObject;
 		_ready = true;
 	}

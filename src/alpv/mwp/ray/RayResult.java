@@ -2,7 +2,7 @@ package alpv.mwp.ray;
 
 import java.io.ByteArrayOutputStream;
 
-public class RayResult implements Comparable<RayResult>{
+public class RayResult implements Comparable<RayResult> {
 	
 	private int lineNumber;
 	private ByteArrayOutputStream stream;

@@ -17,4 +17,5 @@ public interface RemoteFuture<ReturnObject> extends Remote {
 	 */
 	ReturnObject get() throws RemoteException;
 
+
 }

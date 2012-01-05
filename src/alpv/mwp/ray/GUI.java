@@ -17,6 +17,7 @@ import javax.swing.*;
  * where file is a ".pix" file.
  */
 public class GUI {
+	
 	private static class DisplayFrame extends JFrame {
 
 		private static final long serialVersionUID = 4822111026232940929L;
@@ -67,6 +68,7 @@ public class GUI {
 	}
 
 	public static void display(String file) throws IOException {
+		
 		BufferedInputStream in;
 		String imageName = "";
 
