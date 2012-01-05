@@ -51,7 +51,6 @@ public class PoolImpl<T> implements Pool<T> {
 	 * ArrayBlockingQueue.size()}
 	 */
 	public int size() throws RemoteException {
-		System.out.println("Finished: " + _workerFinished.get() + "/" + _workerCount);
 		if(_workerFinished.get() >= _workerCount) {
 			return -1;
 		}
