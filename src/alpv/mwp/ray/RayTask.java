@@ -5,6 +5,9 @@ import java.rmi.RemoteException;
 
 import alpv.mwp.Task;
 
+/**
+ * Render the current stripe and store results in a temp pool
+ */
 public class RayTask implements Task<Integer, RayResult> {
 
 	private static final long serialVersionUID = 3659366838266519515L;
@@ -17,12 +20,13 @@ public class RayTask implements Task<Integer, RayResult> {
 	@Override
 	public RayResult exec(final Integer lineNumber) {
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        final RendererFrontend rendfe = new RendererFrontend(byteOutputStream);
-        rendfe.setWindowStrip(lineNumber,lineNumber+RayJob.THREAD_NUMBER_OF_LINES);
-        rendfe.render();
-        RayResult result = new RayResult(lineNumber, byteOutputStream);
-        try {
-        	_rayJob.getTempPool().put(result);
+		final RendererFrontend rendfe = new RendererFrontend(byteOutputStream);
+		rendfe.setWindowStrip(lineNumber, lineNumber
+				+ RayJob.THREAD_NUMBER_OF_LINES);
+		rendfe.render();
+		RayResult result = new RayResult(lineNumber, byteOutputStream);
+		try {
+			_rayJob.getTempPool().put(result);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

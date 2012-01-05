@@ -30,33 +30,35 @@ public class RayClient {
 		try {
 			Job<Integer, RayResult, RayComplete> job = new RayJob();
 
-			RemoteFuture<RayComplete> remoteFuture = _server
-					.doJob(job);
+			RemoteFuture<RayComplete> remoteFuture = _server.doJob(job);
 
 			showPicture(remoteFuture);
-			
+
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void showPicture(RemoteFuture<RayComplete> remoteFuture) {
+
 		
-		System.out.println("Show picture.");
 
 		try {
 			RayComplete complete;
-			
-			
+
+			File outF = File.createTempFile("alpiv", ".pix");
+			String hdr = "RGB\n" + RayJob.WIDTH + " " + RayJob.HEIGHT
+			+ " 8 8 8\n";
+
 			do {
+				// Receive parts until rendering finished
 				complete = remoteFuture.get();
 				
-				File outF = File.createTempFile("alpiv", ".pix");
+				System.out.println("Received new part.");
+
 				OutputStream outs = new FileOutputStream(outF);
-				
+
 				// write header
-				String hdr = "RGB\n" + RayJob.WIDTH + " " + RayJob.HEIGHT
-						+ " 8 8 8\n";
 				BufferedWriter wOut = new BufferedWriter(
 						new OutputStreamWriter(outs));
 				wOut.write(hdr, 0, hdr.length());
@@ -70,11 +72,13 @@ public class RayClient {
 				outs.close();
 
 				GUI.display(outF.getCanonicalPath());
-				
-			} while(!complete.isFinished());
-			
+				Thread.sleep(100);
+
+			} while (!complete.isFinished());
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

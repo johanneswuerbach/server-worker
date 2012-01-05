@@ -57,6 +57,7 @@ public class GUI {
 			_dimension = new Dimension(width, height);
 		}
 		
+		// Set pixels of current image
 		public void setPixels(int[] pix) {
 			MemoryImageSource source = new MemoryImageSource(_width, _height, pix, 0, _width);
 			_image = createImage(source);
@@ -109,10 +110,13 @@ public class GUI {
 				pix[i] = (255 << 24) | (in.read() << 16) | (in.read() << 8)
 						| (in.read());
 			}
+			
+			in.close();
 		} else {
 			throw new IOException("Unknown image type");
 		}
 		
+		// Create and repaint
 		if(_image == null) {
 			_image = new ImagePanel(imageName, width, height, pix);
 		}

@@ -64,6 +64,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.exit(0);
 	}
 
 	@Override
@@ -83,10 +84,10 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	public <Argument, Result, ReturnObject> RemoteFuture<ReturnObject> doJob(
 			final Job<Argument, Result, ReturnObject> job)
 			throws RemoteException {
-		final PoolImpl<Argument> argumentPool = new PoolImpl<Argument>(_workers.size());
+		final PoolFinishedImpl<Argument> argumentPool = new PoolFinishedImpl<Argument>(_workers.size());
 		job.split(argumentPool, _numberOfWorkers);
 		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
-		System.out.println("Server: Start job using " + _workers.size() + " workers.");
+		System.out.println("Server: Start job. Workers: " + _workers.size());
 		for (Worker w : _workers) {
 			w.start(job.getTask(), argumentPool, resultPool);
 		}
@@ -96,8 +97,9 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			public void run() {
 				try {
 					while (argumentPool.size() != -1) {
+						// System.out.println("Server: Arguments left: " + argumentPool.size());
 						try {
-							Thread.sleep(500);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							// ignore
 						}

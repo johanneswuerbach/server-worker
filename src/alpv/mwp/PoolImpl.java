@@ -2,7 +2,6 @@ package alpv.mwp;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is nothing else then a java.util.concurrent.ArrayBlockingQueue.
@@ -10,20 +9,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PoolImpl<T> implements Pool<T> {
 
-	private final ArrayBlockingQueue<T> _queue;
-	private final static int CAPACITY = 200;
-	private int _workerCount;
-	private AtomicInteger _workerFinished;
+	protected final ArrayBlockingQueue<T> _queue;
+	protected final static int CAPACITY = 200;
 	
 	public PoolImpl() {
-		super();
-		_queue = new ArrayBlockingQueue<T>(CAPACITY);
-	}
-	
-	public PoolImpl(int workerCount) {
-		super();
-		_workerCount = workerCount;
-		_workerFinished = new AtomicInteger();
 		_queue = new ArrayBlockingQueue<T>(CAPACITY);
 	}
 
@@ -45,20 +34,15 @@ public class PoolImpl<T> implements Pool<T> {
 	 */
 	public T get() throws RemoteException {
 		T result = _queue.poll();
-		if(result == null && _workerFinished != null) {
-			_workerFinished.incrementAndGet();
-		}
 		return result;
 	}
 
 	/**
 	 * See {@link java.util.concurrent.ArrayBlockingQueue#size()
 	 * ArrayBlockingQueue.size()}
+	 * Returns -1 if all workers are finished
 	 */
 	public int size() throws RemoteException {
-		if(_workerFinished != null && _workerFinished.get() >= _workerCount) {
-			return -1;
-		}
 		return _queue.size();
 	}
 

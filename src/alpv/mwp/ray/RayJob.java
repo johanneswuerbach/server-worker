@@ -25,9 +25,10 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 		_task = new RayTask(this);
 		_merging = false;
 	}
-	
+
+	// Create temp pool if needed
 	public PoolImpl<RayResult> getTempPool() {
-		if(_tempPool == null) {
+		if (_tempPool == null) {
 			_tempPool = new PoolImpl<RayResult>();
 		}
 		return _tempPool;
@@ -43,21 +44,22 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 			}
 		}
 
+		// Merging and sending of temp. parts
 		Thread collector = new Thread(new Runnable() {
 			public void run() {
+				int lastSize = 0;
 				while (!_merging) {
-					
 					try {
 						PoolImpl<RayResult> pool = getTempPool();
-						if(pool.size() > 0) {
+						if (pool.size() > lastSize) {
 							_remoteFuture.set(collect(pool, false));
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
-					
+
 					try {
-						Thread.sleep(500);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -86,12 +88,12 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 			PriorityQueue<RayResult> results = new PriorityQueue<RayResult>(
 					resPool.size());
 			while ((result = resPool.get()) != null) {
-				
+
 				results.add(result);
 			}
 			while ((result = results.poll()) != null) {
 				// Add again, because it's only the temp pool
-				if(!isFinished) {
+				if (!isFinished) {
 					resPool.put(result);
 				}
 				ByteArrayOutputStream outputStream = result.getStream();
@@ -106,7 +108,7 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 	}
 
 	public RayRemoteFuture getFuture() {
-		if(_remoteFuture == null) {
+		if (_remoteFuture == null) {
 			try {
 				_remoteFuture = new RayRemoteFuture();
 			} catch (RemoteException e) {
