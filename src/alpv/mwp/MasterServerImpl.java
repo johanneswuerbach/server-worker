@@ -85,8 +85,8 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			throws RemoteException {
 		final PoolImpl<Argument> argumentPool = new PoolImpl<Argument>(_workers.size());
 		job.split(argumentPool, _numberOfWorkers);
-		final PoolImpl<Result> resultPool = new PoolImpl<Result>(_workers.size());
-		System.out.println("Server: Workers: " + _workers.size());
+		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
+		System.out.println("Server: Start job using " + _workers.size() + " workers.");
 		for (Worker w : _workers) {
 			w.start(job.getTask(), argumentPool, resultPool);
 		}
@@ -96,17 +96,14 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			public void run() {
 				try {
 					while (argumentPool.size() != -1) {
-						System.out.println("Observer: arguments.size() = "
-								+ argumentPool.size());
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							// ignore
 						}
 					}
-					System.out.println("Observer: start merging");
+					System.out.println("Server: Merge");
 					job.merge(resultPool);
-					System.out.println("Observer: Merged.");
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}

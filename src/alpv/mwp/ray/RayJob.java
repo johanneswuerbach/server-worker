@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 
 import alpv.mwp.Job;
 import alpv.mwp.Pool;
+import alpv.mwp.PoolImpl;
 
 public class RayJob implements Job<Integer, RayResult, RayComplete> {
 
@@ -17,10 +18,19 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 	public static final int WIDTH = 800; // see Example
 	private RayTask _task;
 	private RayRemoteFuture _remoteFuture;
-	private boolean _merging = false;
+	private boolean _merging;
+	private PoolImpl<RayResult> _tempPool;
 
 	public RayJob() throws RemoteException {
-		_task = new RayTask();
+		_task = new RayTask(this);
+		_merging = false;
+	}
+	
+	public PoolImpl<RayResult> getTempPool() {
+		if(_tempPool == null) {
+			_tempPool = new PoolImpl<RayResult>();
+		}
+		return _tempPool;
 	}
 
 	@Override
@@ -36,7 +46,21 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 		Thread collector = new Thread(new Runnable() {
 			public void run() {
 				while (!_merging) {
-					// _remoteFuture.set(collect(_tempPool, false));
+					
+					try {
+						PoolImpl<RayResult> pool = getTempPool();
+						if(pool.size() > 0) {
+							_remoteFuture.set(collect(pool, false));
+						}
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+					
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -62,9 +86,14 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 			PriorityQueue<RayResult> results = new PriorityQueue<RayResult>(
 					resPool.size());
 			while ((result = resPool.get()) != null) {
+				
 				results.add(result);
 			}
 			while ((result = results.poll()) != null) {
+				// Add again, because it's only the temp pool
+				if(!isFinished) {
+					resPool.put(result);
+				}
 				ByteArrayOutputStream outputStream = result.getStream();
 				outputStream.writeTo(baos);
 				outputStream.flush();

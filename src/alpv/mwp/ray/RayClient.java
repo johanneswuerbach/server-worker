@@ -46,11 +46,13 @@ public class RayClient {
 
 		try {
 			RayComplete complete;
-			File outF = File.createTempFile("alpiv", ".pix");
-			OutputStream outs = new FileOutputStream(outF);
+			
 			
 			do {
 				complete = remoteFuture.get();
+				
+				File outF = File.createTempFile("alpiv", ".pix");
+				OutputStream outs = new FileOutputStream(outF);
 				
 				// write header
 				String hdr = "RGB\n" + RayJob.WIDTH + " " + RayJob.HEIGHT

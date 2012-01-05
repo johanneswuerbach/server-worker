@@ -73,7 +73,6 @@ public class WorkerImpl implements Worker, Runnable, Serializable {
 			try {
 				for (Argument argument = _argumentPool.get(); argument != null
 						&& _isRunning; argument = _argumentPool.get()) {
-					System.out.println("Worker: new argument"); 
 					_resultPool.put(_task.exec(argument));
 				}
 			} catch (RemoteException e) {

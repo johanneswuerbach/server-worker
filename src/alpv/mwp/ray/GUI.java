@@ -40,32 +40,43 @@ public class GUI {
 	private static class ImagePanel extends JPanel {
 
 		private static final long serialVersionUID = -1569529666226454608L;
-		MemoryImageSource source;
-		Image image;
-		String imageName;
-		Dimension dimension;
+		private final Dimension _dimension;
+		private final String _imageName;
+		private final int _width;
+		private final int _height;
+		
+		private Image _image;
 
 		ImagePanel(String imageName, int width, int height, int[] pix) {
-			this.imageName = imageName;
+			_imageName = imageName;
+			_width = width;
+			_height = height;
+			
+			setPixels(pix);
 
-			source = new MemoryImageSource(width, height, pix, 0, width);
-			image = createImage(source);
-
-			dimension = new Dimension(width, height);
+			_dimension = new Dimension(width, height);
+		}
+		
+		public void setPixels(int[] pix) {
+			MemoryImageSource source = new MemoryImageSource(_width, _height, pix, 0, _width);
+			_image = createImage(source);
 		}
 
 		public String getImageName() {
-			return imageName;
+			return _imageName;
 		}
 
 		public void paint(Graphics g) {
-			g.drawImage(image, 0, 0, this);
+			g.drawImage(_image, 0, 0, this);
 		}
 
 		public Dimension getPreferredSize() {
-			return dimension;
+			return _dimension;
 		}
 	}
+
+	private static DisplayFrame _display;
+	private static ImagePanel _image;
 
 	public static void display(String file) throws IOException {
 		
@@ -101,12 +112,22 @@ public class GUI {
 		} else {
 			throw new IOException("Unknown image type");
 		}
-
-		ImagePanel image = new ImagePanel(imageName, width, height, pix);
-		DisplayFrame display = new DisplayFrame(image);
-
-		display.pack();
-		display.setVisible(true);
+		
+		if(_image == null) {
+			_image = new ImagePanel(imageName, width, height, pix);
+		}
+		else {
+			_image.setPixels(pix);
+		}
+		
+		if(_display == null) {
+			_display = new DisplayFrame(_image);
+			_display.pack();
+			_display.setVisible(true);
+		}
+		else {
+			_display.repaint();
+		}
 	}
 
 	static final byte LF = 0x0A;

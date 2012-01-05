@@ -14,7 +14,12 @@ public class PoolImpl<T> implements Pool<T> {
 	private final static int CAPACITY = 200;
 	private int _workerCount;
 	private AtomicInteger _workerFinished;
-
+	
+	public PoolImpl() {
+		super();
+		_queue = new ArrayBlockingQueue<T>(CAPACITY);
+	}
+	
 	public PoolImpl(int workerCount) {
 		super();
 		_workerCount = workerCount;
@@ -40,7 +45,7 @@ public class PoolImpl<T> implements Pool<T> {
 	 */
 	public T get() throws RemoteException {
 		T result = _queue.poll();
-		if(result == null) {
+		if(result == null && _workerFinished != null) {
 			_workerFinished.incrementAndGet();
 		}
 		return result;
@@ -51,7 +56,7 @@ public class PoolImpl<T> implements Pool<T> {
 	 * ArrayBlockingQueue.size()}
 	 */
 	public int size() throws RemoteException {
-		if(_workerFinished.get() >= _workerCount) {
+		if(_workerFinished != null && _workerFinished.get() >= _workerCount) {
 			return -1;
 		}
 		return _queue.size();
