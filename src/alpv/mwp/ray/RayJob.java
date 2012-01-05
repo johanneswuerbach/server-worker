@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import alpv.mwp.JobImpl;
 import alpv.mwp.Pool;
 
-public class RayJob extends JobImpl<Integer, ByteArrayOutputStream, Boolean> {
+public class RayJob extends JobImpl<Integer, RayResult, Boolean> {
 
 	private static final long serialVersionUID = 5288048324055927759L;
 	public static final int THREAD_NUMBER_OF_LINES = 40;
@@ -35,7 +38,7 @@ public class RayJob extends JobImpl<Integer, ByteArrayOutputStream, Boolean> {
 	}
 
 	@Override
-	public void merge(Pool<ByteArrayOutputStream> resPool) {
+	public void merge(Pool<RayResult> resPool) {
 		try {
 			// temporary File for the result picture
 			File outF = File.createTempFile("alpiv", ".pix");
@@ -44,8 +47,14 @@ public class RayJob extends JobImpl<Integer, ByteArrayOutputStream, Boolean> {
 			writeHeader(outs);
 
 			// write data parts
-			ByteArrayOutputStream outputStream;
-			while ((outputStream = resPool.get()) != null) {
+			RayResult result;
+			List<ByteArrayOutputStream> streams = new ArrayList<ByteArrayOutputStream>();
+			while ((result = resPool.get()) != null) {
+				streams.add(result.getLineNumber()/THREAD_NUMBER_OF_LINES,result.getStream());
+			}
+			Collections.reverse(streams);
+			for(ByteArrayOutputStream stream : streams){
+				ByteArrayOutputStream outputStream = stream;
 				outputStream.writeTo(outs);
 				outputStream.flush();
 			}

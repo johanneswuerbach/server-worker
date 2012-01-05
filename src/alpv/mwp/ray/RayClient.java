@@ -1,6 +1,5 @@
 package alpv.mwp.ray;
 
-import java.io.ByteArrayOutputStream;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -23,7 +22,7 @@ public class RayClient {
 
 	public void execute() {
 		try {
-			Job<Integer, ByteArrayOutputStream, Boolean> job = new RayJob();
+			Job<Integer, RayResult, Boolean> job = new RayJob();
 
 			RemoteFuture<Boolean> remoteFuture = _server.doJob(job);
 			System.out.println(remoteFuture.get());
