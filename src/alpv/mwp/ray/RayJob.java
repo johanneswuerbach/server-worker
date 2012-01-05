@@ -15,13 +15,12 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 	public static final int THREAD_NUMBER_OF_LINES = 40;
 	public static final int HEIGHT = 800; // see Example
 	public static final int WIDTH = 800; // see Example
-	protected RayTask _task;
-	protected Integer _argument;
-	protected RayRemoteFuture _remoteFuture;
+	private RayTask _task;
+	private RayRemoteFuture _remoteFuture;
+	private boolean _merging = false;
 
 	public RayJob() throws RemoteException {
 		_task = new RayTask();
-		_remoteFuture = new RayRemoteFuture();
 	}
 
 	@Override
@@ -33,14 +32,24 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 				e.printStackTrace();
 			}
 		}
+
+		Thread collector = new Thread(new Runnable() {
+			public void run() {
+				while (!_merging) {
+					// _remoteFuture.set(collect(_tempPool, false));
+				}
+			}
+		});
+		collector.start();
 	}
 
 	@Override
 	public void merge(Pool<RayResult> resPool) {
-		_remoteFuture.set(collect(resPool));
+		_merging = true;
+		_remoteFuture.set(collect(resPool, true));
 	}
 
-	private RayComplete collect(Pool<RayResult> resPool) {
+	private RayComplete collect(Pool<RayResult> resPool, boolean isFinished) {
 
 		ByteArrayOutputStream baos = null;
 
@@ -64,10 +73,17 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		return new RayComplete(baos, true);
+		return new RayComplete(baos, isFinished);
 	}
 
 	public RayRemoteFuture getFuture() {
+		if(_remoteFuture == null) {
+			try {
+				_remoteFuture = new RayRemoteFuture();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 		return _remoteFuture;
 	}
 
