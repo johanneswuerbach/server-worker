@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import alpv.mwp.JobImpl;
 import alpv.mwp.Pool;
@@ -48,13 +49,12 @@ public class RayJob extends JobImpl<Integer, RayResult, Boolean> {
 
 			// write data parts
 			RayResult result;
-			List<ByteArrayOutputStream> streams = new ArrayList<ByteArrayOutputStream>();
+			PriorityQueue<RayResult> results = new PriorityQueue<RayResult>(resPool.size());
 			while ((result = resPool.get()) != null) {
-				streams.add(result.getLineNumber()/THREAD_NUMBER_OF_LINES,result.getStream());
+				results.add(result);
 			}
-			Collections.reverse(streams);
-			for(ByteArrayOutputStream stream : streams){
-				ByteArrayOutputStream outputStream = stream;
+			while((result = results.poll()) != null){
+				ByteArrayOutputStream outputStream = result.getStream();
 				outputStream.writeTo(outs);
 				outputStream.flush();
 			}

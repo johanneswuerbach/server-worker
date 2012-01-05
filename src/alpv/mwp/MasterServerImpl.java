@@ -99,7 +99,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 						System.out.println("Observer: arguments.size() = "
 								+ argumentPool.size());
 						try {
-							Thread.sleep(500);
+							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							// ignore
 						}
