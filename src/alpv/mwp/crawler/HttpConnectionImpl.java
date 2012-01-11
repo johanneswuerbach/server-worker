@@ -56,7 +56,7 @@ public class HttpConnectionImpl implements HttpConnection {
 		boolean finished = false;
 		_headerKeys = new ArrayList<String>();
 		_headerValues = new ArrayList<String>();
-		while ((line = reader.readLine()) != null && !finished) {
+		while (!finished && (line = reader.readLine()) != null) {
 			if(line.isEmpty()) {
 				finished = true;
 			}
