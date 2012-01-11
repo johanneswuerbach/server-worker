@@ -1,6 +1,5 @@
 package alpv.mwp.crawler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +21,8 @@ public class HttpConnectionImpl implements HttpConnection {
 
 		System.out.println("Connect to: " + httpURL.getHost() + ":"
 				+ httpURL.getPort());
+		
+		_content = socket.getInputStream();
 
 		// Send request
 		String protocol = "HTTP/1.1";
@@ -29,18 +30,18 @@ public class HttpConnectionImpl implements HttpConnection {
 				+ "Host: " + httpURL.getHost() + "\r\n" + "\r\n";
 
 		OutputStream outputStream = socket.getOutputStream();
-		_content = socket.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				_content));
-
 		outputStream.write(request.getBytes());
 		socket.shutdownOutput();
+		
+		InputStreamReader reader = new InputStreamReader(
+				_content);
 
 		// Parse response
 		String line;
 
 		// Parse status code
-		line = reader.readLine();
+		line = readLine(reader);
+		System.out.println(line);
 		if (line != null) {
 			String[] parts = line.split(" ");
 			if (line.length() >= 2) {
@@ -57,11 +58,10 @@ public class HttpConnectionImpl implements HttpConnection {
 		boolean dontParse = false;
 		_headerKeys = new ArrayList<String>();
 		_headerValues = new ArrayList<String>();
-		while (!finished && (line = reader.readLine()) != null) {
+		while (!finished && (line = readLine(reader)) != null) {
 			if (line.isEmpty()) {
 				finished = true;
 			} else {
-				System.out.println(line);
 				String[] parts = line.split(": ", 2);
 				if (parts.length == 2) {
 					if(parts[0].equals("Content-Type") && !parts[1].startsWith("text/html")) {
@@ -78,6 +78,21 @@ public class HttpConnectionImpl implements HttpConnection {
 		if (dontParse) {
 			_content.close();
 		}
+	}
+	
+	/**
+	 * Read a line by reading single chars
+	 * (Don't buffer the content)
+	 */
+	private String readLine(InputStreamReader reader) throws IOException {
+		char[] c = new char[1];
+		String line = "";
+		while(reader.read(c) == 1 && c[0] != '\n') {
+			if(c[0] != '\r') {
+				line += c[0];
+			}
+		}
+		return line;
 	}
 
 	@Override
