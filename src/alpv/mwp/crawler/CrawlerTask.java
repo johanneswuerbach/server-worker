@@ -21,7 +21,7 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 	@Override
 	public List<String> exec(HttpURL a) {
 		try {
-			URLParser parser = new URLParser(a.openConnection().getContent());
+			URLParser parser = new URLParser(a.openConnection().getContent(), a);
 			parser.parse();
 			for (HttpURL url : parser.get_urls()){
 				_job.getArgPool().put(url);
