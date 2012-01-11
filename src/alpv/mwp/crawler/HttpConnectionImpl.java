@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class HttpConnectionImpl implements HttpConnection {
 
 	private final int _responseCode;
-	private final String[] _headerKeys;
-	private final String[] _headerValues;
+	private final ArrayList<String> _headerKeys;
+	private final ArrayList<String> _headerValues;
 	private final InputStream _content;
 
 	public HttpConnectionImpl(HttpURL httpURL) throws UnknownHostException, IOException {
@@ -54,27 +54,23 @@ public class HttpConnectionImpl implements HttpConnection {
 		
 		// Parse header
 		boolean finished = false;
-		ArrayList<String> headerKeys = new ArrayList<String>();
-		ArrayList<String> headerValues = new ArrayList<String>();
-		while ((reader.readLine()) != null && !finished) {
-			if(line == "") {
+		_headerKeys = new ArrayList<String>();
+		_headerValues = new ArrayList<String>();
+		while ((line = reader.readLine()) != null && !finished) {
+			if(line.isEmpty()) {
 				finished = true;
 			}
 			else {
 				String[] parts = line.split(": ", 2);
 				if(parts.length == 2) {
-					headerKeys.add(parts[0]);
-					headerValues.add(parts[1]);
+					_headerKeys.add(parts[0]);
+					_headerValues.add(parts[1]);
 				}
 				else {
 					throw new IOException("Invalid response");
 				}
 			}
-			System.out.println(line);
 		}
-
-		_headerKeys = (String[]) headerKeys.toArray();
-		_headerValues = (String[]) headerValues.toArray();
 	}
 
 	@Override
@@ -84,12 +80,12 @@ public class HttpConnectionImpl implements HttpConnection {
 
 	@Override
 	public String getHeaderFieldKey(int field) {
-		return _headerKeys[field];
+		return _headerKeys.get(field);
 	}
 
 	@Override
 	public String getHeaderField(int field) {
-		return _headerValues[field];
+		return _headerValues.get(field);
 	}
 
 	@Override
