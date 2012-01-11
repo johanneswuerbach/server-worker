@@ -25,7 +25,11 @@ public class URLParser {
 		try {
 			_url = url;
 			_content = _url.openConnection().getContent();
-			parse();
+			if (_content.available() > 0) {
+				BufferedReader contentReader = new BufferedReader(
+						new InputStreamReader(_content));
+				parse(contentReader);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -35,14 +39,6 @@ public class URLParser {
 		HttpURL url = new HttpURLImpl(
 				"http://www.fu-berlin.de/universitaet/was-uns-auszeichnet/nachwuchs/bsrt.html");
 		new URLParser(url);
-	}
-
-	public void parse() throws IOException {
-		if (_content.available() > 0) {
-			BufferedReader contentReader = new BufferedReader(
-					new InputStreamReader(_content));
-			parse(contentReader);
-		}
 	}
 
 	private void parse(BufferedReader reader) throws IOException {
