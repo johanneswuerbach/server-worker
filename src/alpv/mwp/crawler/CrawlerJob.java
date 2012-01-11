@@ -6,10 +6,8 @@ import java.util.List;
 
 import alpv.mwp.Job;
 import alpv.mwp.Pool;
-import alpv.mwp.PoolImpl;
 import alpv.mwp.RemoteFuture;
 import alpv.mwp.Task;
-import alpv.mwp.ray.RayResult;
 
 public class CrawlerJob implements Job<HttpURL, String, List<String>> {
 

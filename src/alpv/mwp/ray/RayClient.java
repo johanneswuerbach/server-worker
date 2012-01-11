@@ -8,52 +8,37 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
+import alpv.mwp.Client;
 import alpv.mwp.Job;
 import alpv.mwp.RemoteFuture;
-import alpv.mwp.Server;
 
-public class RayClient {
-	private Server _server;
+public class RayClient extends Client {
 
 	public RayClient(String host, int port) throws RemoteException,
 			NotBoundException {
-		System.out.println("Client: looking for server " + host + ":" + port);
-		Registry registry = LocateRegistry.getRegistry(host, port);
-		_server = (Server) (registry.lookup("mwp"));
-		System.out.println("Client: starting");
+		super(host, port);
 	}
 
-	public void execute() {
-		try {
-			Job<Integer, RayResult, RayComplete> job = new RayJob();
-
-			RemoteFuture<RayComplete> remoteFuture = _server.doJob(job);
-
-			showPicture(remoteFuture);
-
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void execute() throws RemoteException {
+		Job<Integer, RayResult, RayComplete> job = new RayJob();
+		RemoteFuture<RayComplete> remoteFuture = _server.doJob(job);
+		showPicture(remoteFuture);
 	}
 
 	private void showPicture(RemoteFuture<RayComplete> remoteFuture) {
-
-		
 
 		try {
 			RayComplete complete;
 
 			File outF = File.createTempFile("alpiv", ".pix");
 			String hdr = "RGB\n" + RayJob.WIDTH + " " + RayJob.HEIGHT
-			+ " 8 8 8\n";
+					+ " 8 8 8\n";
 
 			do {
 				// Receive parts until rendering finished
 				complete = remoteFuture.get();
-				
+
 				System.out.println("Received new part.");
 
 				OutputStream outs = new FileOutputStream(outF);

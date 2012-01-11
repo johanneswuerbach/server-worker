@@ -5,12 +5,16 @@ import java.rmi.RemoteException;
 
 import alpv.mwp.crawler.CrawlerClient;
 import alpv.mwp.ray.RayClient;
+import alpv.mwp.testOne.PowClient;
 
 public class Main {
+	
+	private static final String DEFAULT_JOB = "crawler";
+	
 	private static final String USAGE = String
 			.format("usage: java -jar UB%%X_%%NAMEN server PORT NUMBER_OF_WORKERS%n"
 					+ "         (to start a server)%n"
-					+ "or:    java -jar UB%%X_%%NAMEN client SERVERIPADDRESS SERVERPORT%n"
+					+ "or:    java -jar UB%%X_%%NAMEN client SERVERIPADDRESS SERVERPORT JOB%n"
 					+ "         (to start a client)%n"
 					+ "or:    java -jar UB%%X_%%NAMEN worker SERVERIPADDRESS SERVERPORT%n"
 					+ "         (to start a worker)");
@@ -29,9 +33,17 @@ public class Main {
 			}else if (args[i].equals("server")) {
 				new MasterServerImpl(Integer.parseInt(args[++i]));
 			} else if (args[i].equals("client")) {
-				CrawlerClient client = new CrawlerClient(args[++i],
-						Integer.parseInt(args[++i]));
-				client.execute();
+				
+				String host = args[++i];
+				int port = Integer.parseInt(args[++i]);
+				
+				Client client = null;
+				if (args.length == 4) {
+					client = startJob(args[++i], host, port);
+				}
+				if(client == null) {
+					startJob(DEFAULT_JOB, host, port);
+				}
 			} else if (args[i].equals("worker")) {
 				WorkerImpl worker = new WorkerImpl(args[++i],
 						Integer.parseInt(args[++i]));
@@ -55,6 +67,23 @@ public class Main {
 			e.printStackTrace();
 			System.err.println("Can't connect. (NotBoundException)");
 		}
+	}
+	
+	private static Client startJob(String job, String host, int port) throws RemoteException, NotBoundException {
+		Client client = null;
+		if(job.equals("pow")) {
+			client = new PowClient(host, port);
+			client.execute();
+		}
+		else if(job.equals("ray")) {
+			client = new RayClient(host, port);
+			client.execute();
+		}
+		else if(job.equals("crawler")) {
+			client = new CrawlerClient(host, port);
+			client.execute();
+		}
+		return client;
 	}
 
 	private static void startAll() {
