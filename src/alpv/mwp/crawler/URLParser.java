@@ -16,30 +16,27 @@ public class URLParser {
 
 	// private HttpURL _url;
 
-	private URL _url;
+	private InputStream _content;
 	List<URL> _urls;
 	List<String> _mailTos;
 
-	public URLParser(URL url) {
-		_url = url;
+	public URLParser(InputStream content) {
+		_content = content;
 		_urls = new ArrayList<URL>();
 		_mailTos = new ArrayList<String>();
 	}
 
 	public static void main(String[] args) throws IOException,
 			BadLocationException {
-		URLParser p = new URLParser(new URL(
+		HttpConnection connection = new HttpConnectionImpl(new HttpURLImpl(
 				"http://de.selfhtml.org/html/verweise/anzeige/a_href_mailto.htm"));
+		URLParser p = new URLParser(connection.getContent());
 		p.parse();
 	}
 
 	public void parse() throws IOException, BadLocationException {
-		System.out.println("start parsing file " + _url.getHost()
-				+ _url.getPath());
-		// InputStream contentStream = _url.openConnection().getContent();
-		InputStream contentStream = _url.openStream();
 		BufferedReader contentReader = new BufferedReader(
-				new InputStreamReader(contentStream));
+				new InputStreamReader(_content));
 		parse(contentReader);
 	}
 
