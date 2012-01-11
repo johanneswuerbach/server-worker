@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.BadLocationException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,23 +17,27 @@ public class URLParser {
 	List<String> _mailTos;
 	HttpURL _url;
 
-	public URLParser(InputStream content, HttpURL url) {
-		_content = content;
+	public URLParser(HttpURL url) {
+
 		_urls = new ArrayList<HttpURL>();
 		_mailTos = new ArrayList<String>();
-		_url = url;
+
+		try {
+			_url = url;
+			_content = _url.openConnection().getContent();
+			parse();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public static void main(String[] args) throws IOException,
-			BadLocationException {
-		HttpURL url = 
-		new HttpURLImpl("http://www.fu-berlin.de/universitaet/was-uns-auszeichnet/nachwuchs/bsrt.html");
-		HttpConnection connection = new HttpConnectionImpl(url);
-		URLParser p = new URLParser(connection.getContent(), url);
-		p.parse();
+	public static void main(String[] args) throws IOException {
+		HttpURL url = new HttpURLImpl(
+				"http://www.fu-berlin.de/universitaet/was-uns-auszeichnet/nachwuchs/bsrt.html");
+		new URLParser(url);
 	}
 
-	public void parse() throws IOException, BadLocationException {
+	public void parse() throws IOException {
 		if (_content.available() > 0) {
 			BufferedReader contentReader = new BufferedReader(
 					new InputStreamReader(_content));
@@ -43,7 +46,8 @@ public class URLParser {
 	}
 
 	private void parse(BufferedReader reader) throws IOException {
-		Pattern p = Pattern.compile("href=(\"|')((http:[^\"']*)|(mailto:[^\"']*)|([^\"^:']*))(\"|')");
+		Pattern p = Pattern
+				.compile("href=(\"|')((http:[^\"']*)|(mailto:[^\"']*)|([^\"^:']*))(\"|')");
 		String line;
 		Matcher m;
 		String url;
@@ -58,29 +62,30 @@ public class URLParser {
 				} else if (url.startsWith("mailto")) {
 					System.out.println("mailto detected: " + url);
 					_mailTos.add(url);
-				}else{
-					if(url.startsWith("#")) {
+				} else {
+					if (url.startsWith("#")) {
 						System.out.println("bad url detected: " + url);
-					}
-					else {
+					} else {
 						System.out.println("http url detected: " + url);
 						if (url.startsWith("/")) {
-							System.out.println("http://" + _url.getHost() + url);
-							_urls.add(new HttpURLImpl("http://" + _url.getHost() + url));
+							System.out
+									.println("http://" + _url.getHost() + url);
+							_urls.add(new HttpURLImpl("http://"
+									+ _url.getHost() + url));
+						} else {
+							System.out.println("http://" + _url.getHost()
+									+ _url.getPath() + url);
+							_urls.add(new HttpURLImpl("http://"
+									+ _url.getHost() + _url.getPath() + url));
 						}
-						else {
-							System.out.println("http://" + _url.getHost() + _url.getPath() + url);
-							_urls.add(new HttpURLImpl("http://" + _url.getHost() + _url.getPath() + url));
-						}
-						
+
 					}
-					
-					
+
 				}
 			}
 		}
 	}
-	
+
 	public List<HttpURL> get_urls() {
 		return _urls;
 	}
