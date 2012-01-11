@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +13,13 @@ import java.util.regex.Pattern;
 
 public class URLParser {
 
-	// private HttpURL _url;
-
 	private InputStream _content;
-	List<URL> _urls;
+	List<HttpURL> _urls;
 	List<String> _mailTos;
 
 	public URLParser(InputStream content) {
 		_content = content;
-		_urls = new ArrayList<URL>();
+		_urls = new ArrayList<HttpURL>();
 		_mailTos = new ArrayList<String>();
 	}
 
@@ -52,7 +49,7 @@ public class URLParser {
 				url = m.group(2);
 				if (url.startsWith("http")) {
 					System.out.println("http url detected: " + url);
-					_urls.add(new URL(url));
+					_urls.add(new HttpURLImpl(url));
 				} else if (url.startsWith("mailto")) {
 					System.out.println("mailto detected: " + url);
 					_mailTos.add(url);
@@ -62,4 +59,13 @@ public class URLParser {
 			}
 		}
 	}
+	
+	public List<HttpURL> get_urls() {
+		return _urls;
+	}
+
+	public List<String> get_mailTos() {
+		return _mailTos;
+	}
+
 }

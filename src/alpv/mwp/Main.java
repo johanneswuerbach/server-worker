@@ -3,6 +3,7 @@ package alpv.mwp;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import alpv.mwp.crawler.CrawlerClient;
 import alpv.mwp.ray.RayClient;
 
 public class Main {
@@ -24,14 +25,11 @@ public class Main {
 		try {
 			int i = 0;
 			if (args.length == 0) {
-				throw new IllegalArgumentException();
-			}
-
-			if (args[i].equals("server")) {
-				new MasterServerImpl(Integer.parseInt(args[++i]),
-						Integer.parseInt(args[++i]));
+				startAll();
+			}else if (args[i].equals("server")) {
+				new MasterServerImpl(Integer.parseInt(args[++i]));
 			} else if (args[i].equals("client")) {
-				RayClient client = new RayClient(args[++i],
+				CrawlerClient client = new CrawlerClient(args[++i],
 						Integer.parseInt(args[++i]));
 				client.execute();
 			} else if (args[i].equals("worker")) {
@@ -57,5 +55,31 @@ public class Main {
 			e.printStackTrace();
 			System.err.println("Can't connect. (NotBoundException)");
 		}
+	}
+
+	private static void startAll() {
+		Thread server = new Thread(new Runnable() {
+			public void run() {
+				String[] args = {"server",  "1337"};
+				main(args);
+			}
+		});
+		server.start();
+		try {Thread.sleep(100);} catch (InterruptedException e) {}
+		Thread worker = new Thread(new Runnable() {
+			public void run() {
+				String[] args = {"worker", "127.0.0.1",  "1337"};
+				main(args);
+			}
+		});
+		worker.start();
+		try {Thread.sleep(100);} catch (InterruptedException e) {}
+		Thread client = new Thread(new Runnable() {
+			public void run() {
+				String[] args = {"client", "127.0.0.1",  "1337"};
+				main(args);
+			}
+		});
+		client.start();
 	}
 }

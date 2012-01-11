@@ -20,13 +20,11 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	private static final String NAME = "mwp";
 
 	private final Registry _registry;
-	private final int _numberOfWorkers;
 	private final List<Worker> _workers;
 
-	public MasterServerImpl(int port, int numberOfWorkers)
+	public MasterServerImpl(int port)
 			throws RemoteException {
 		System.out.println("Server: init");
-		_numberOfWorkers = numberOfWorkers;
 		_registry = LocateRegistry.createRegistry(port);
 		_registry.rebind(NAME, this);
 
@@ -85,7 +83,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			final Job<Argument, Result, ReturnObject> job)
 			throws RemoteException {
 		final PoolFinishedImpl<Argument> argumentPool = new PoolFinishedImpl<Argument>(_workers.size());
-		job.split(argumentPool, _numberOfWorkers);
+		job.split(argumentPool, _workers.size());
 		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
 		System.out.println("Server: Start job. Workers: " + _workers.size());
 		for (Worker w : _workers) {
