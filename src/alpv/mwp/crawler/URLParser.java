@@ -29,7 +29,7 @@ public class URLParser {
 	public static void main(String[] args) throws IOException,
 			BadLocationException {
 		URLParser p = new URLParser(new URL(
-				"http://archive.ncsa.illinois.edu/mosaic.html"));
+				"http://de.selfhtml.org/html/verweise/anzeige/a_href_mailto.htm"));
 		p.parse();
 	}
 
@@ -44,7 +44,7 @@ public class URLParser {
 	}
 
 	private void parse(BufferedReader reader) throws IOException {
-		Pattern p = Pattern.compile("href=(\"|')(http[^\"']*)(\"|')");
+		Pattern p = Pattern.compile("href=(\"|')((http:[^\"']*)|(mailto:[^\"']*))(\"|')");
 		String line;
 		Matcher m;
 		String url;
@@ -53,13 +53,15 @@ public class URLParser {
 			m = p.matcher(line);
 			while (m.find()) {
 				url = m.group(2);
-				System.out.println(url);
 				if (url.startsWith("http")) {
+					System.out.println("http url detected: " + url);
 					_urls.add(new URL(url));
 				} else if (url.startsWith("mailto")) {
+					System.out.println("mailto detected: " + url);
 					_mailTos.add(url);
+				}else{
+					System.out.println("bad url detected: " + url);
 				}
-
 			}
 		}
 	}
