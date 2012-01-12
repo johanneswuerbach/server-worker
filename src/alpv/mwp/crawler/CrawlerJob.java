@@ -3,7 +3,6 @@ package alpv.mwp.crawler;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import alpv.mwp.Job;
@@ -19,9 +18,9 @@ public class CrawlerJob implements
 	private CrawlerRemoteFuture _remoteFuture;
 	private Task<CrawlerArgument, List<String>> _task;
 
-	public CrawlerJob(CrawlerArgument httpURLImpl) {
+	public CrawlerJob(CrawlerArgument httpURLImpl) throws RemoteException {
 		_url = httpURLImpl;
-		_task = new CrawlerTask(this, new HashMap<String, Boolean>());
+		_task = new CrawlerTask(this, new CrawlerHistory());
 	}
 
 	@Override

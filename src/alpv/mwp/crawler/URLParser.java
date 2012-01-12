@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,9 +17,9 @@ public class URLParser {
 	List<HttpURL> _urls;
 	List<String> _mailTos;
 	HttpURL _url;
-	private Map<String, Boolean> _checkedURLs;
+	private History<String> _checkedURLs;
 
-	public URLParser(HttpURL url, Map<String, Boolean> checkedURLs) {
+	public URLParser(HttpURL url, History<String> checkedURLs) {
 
 		_urls = new ArrayList<HttpURL>();
 		_mailTos = new ArrayList<String>();
@@ -75,15 +75,19 @@ public class URLParser {
 
 		url = sanitizeUrl(url);
 
-		if (!_checkedURLs.containsKey(url)) {
-			// System.out.println(url +
-			// " not checked. Adding to argument pool");
-			_checkedURLs.put(url, null);
-			try {
-				_urls.add(new HttpURLImpl(url));
-			} catch (IOException e) {
-				// drop this url
+		try {
+			if (!_checkedURLs.containsKey(url)) {
+				// System.out.println(url +
+				// " not checked. Adding to argument pool");
+				_checkedURLs.put(url);
+				try {
+					_urls.add(new HttpURLImpl(url));
+				} catch (IOException e) {
+					// drop this url
+				}
 			}
+		} catch (RemoteException e) {
+			// Ignore
 		}
 	}
 
@@ -102,7 +106,10 @@ public class URLParser {
 		// Remove folders bevor ../
 		while (url.contains("../")) {
 			String[] parts = url.split("/\\.\\.", 2);
-			url = parts[0].substring(0, parts[0].lastIndexOf('/')) + parts[1];
+			int index;
+			if ((index = parts[0].lastIndexOf('/')) > 0) {
+				url = parts[0].substring(0, index) + parts[1];
+			}
 		}
 		return protocol + url;
 	}

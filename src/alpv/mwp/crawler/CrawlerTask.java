@@ -3,7 +3,6 @@ package alpv.mwp.crawler;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
 
 import alpv.mwp.Task;
 
@@ -15,9 +14,9 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 	private static final int MAX_DEEP = 2;
 	private static final long serialVersionUID = 3659366838266519515L;
 	private CrawlerJob _job;
-	private Map<String, Boolean> _checkedURLs;
+	private History<String> _checkedURLs;
 
-	public CrawlerTask(CrawlerJob job, Map<String, Boolean> checkedUrls) {
+	public CrawlerTask(CrawlerJob job, History<String> checkedUrls) {
 		_job = job;
 		_checkedURLs = checkedUrls;
 	}

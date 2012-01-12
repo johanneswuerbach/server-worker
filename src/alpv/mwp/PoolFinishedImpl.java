@@ -1,6 +1,8 @@
 package alpv.mwp;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is nothing else then a java.util.concurrent.ArrayBlockingQueue.
@@ -14,12 +16,12 @@ public class PoolFinishedImpl<T> extends PoolImpl<T> {
 	private int _poisonCount;
 
 	public PoolFinishedImpl()  throws RemoteException {
-		this(0);
+		this(new ArrayList<Worker>());
 	}
 
-	public PoolFinishedImpl(int workerCount) throws RemoteException {
+	public PoolFinishedImpl(List<Worker> _workers) throws RemoteException {
 		super();
-		_workerCount = workerCount;
+		_workerCount = _workers.size();
 		_workerFinished = 0;
 		_poisonCount = 0;
 	}

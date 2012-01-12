@@ -10,7 +10,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class WorkerImpl extends UnicastRemoteObject implements Worker, Runnable, Serializable {
+public class WorkerImpl extends UnicastRemoteObject implements Worker,
+		Runnable, Serializable {
 
 	private static final long serialVersionUID = -4483191034408758974L;
 	private final Master _master;
@@ -72,12 +73,21 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker, Runnable,
 		 */
 		public void run() {
 			try {
-				for (Argument argument = _argumentPool.get(); _isRunning
-						&& argument != null && _argumentPool.size() >= 0; argument = _argumentPool
-						.get()) {
-					Result result = _task.exec(argument);
-					if (result != null) {
-						_resultPool.put(result);
+				while (_isRunning && _argumentPool.size() != -1) {
+					Argument argument = _argumentPool.get();
+					if (argument == null) {
+						// Wait for more new arguments
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					} else {
+						
+						Result result = _task.exec(argument);
+						if (result != null) {
+							_resultPool.put(result);
+						}
 					}
 				}
 			} catch (RemoteException e) {

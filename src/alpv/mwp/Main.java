@@ -32,7 +32,8 @@ public class Main {
 		try {
 			int i = 0;
 			if (args.length == 0) {
-				startAll();
+				// startAll();
+				System.err.println(USAGE);
 			} else if (args[i].equals("server")) {
 				new MasterServerImpl(Integer.parseInt(args[++i]));
 			} else if (args[i].equals("client")) {
@@ -88,7 +89,7 @@ public class Main {
 		return client;
 	}
 
-	private static void startAll() {
+	public static void startAll() {
 		
 		Thread server = new Thread(new Runnable() {
 			public void run() {
