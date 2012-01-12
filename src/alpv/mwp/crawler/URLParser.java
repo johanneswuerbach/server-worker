@@ -75,7 +75,11 @@ public class URLParser {
 		if (!_checkedURLs.containsKey(url)) {
 //			System.out.println(url + " not checked. Adding to argument pool");
 			_checkedURLs.put(url, null);
-			_urls.add(new HttpURLImpl(url));
+			try {
+				_urls.add(new HttpURLImpl(url));
+			} catch (IOException e) {
+				//drop this url
+			}
 		}
 	}
 

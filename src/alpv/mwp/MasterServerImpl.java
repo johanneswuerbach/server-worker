@@ -41,7 +41,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	private void run() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
-			System.out.println("running");
+//			System.out.println("running");
 			try {
 				String line = br.readLine();
 				if (line != null) {

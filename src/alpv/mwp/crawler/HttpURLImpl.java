@@ -14,9 +14,9 @@ public class HttpURLImpl implements HttpURL, Serializable{
 	private final int _port;
 	private final String _path;
 	
-	public HttpURLImpl(String url) {
+	public HttpURLImpl(String url) throws IOException {
 		if(!url.matches(VALID_URL)) {
-			throw new IllegalArgumentException();
+			throw new IOException(url);
 		}
 		
 		// Remove http://
