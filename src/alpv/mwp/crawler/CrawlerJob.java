@@ -2,6 +2,7 @@ package alpv.mwp.crawler;
 
 import java.rmi.RemoteException;
 
+import java.util.HashMap;
 import java.util.List;
 
 import alpv.mwp.Job;
@@ -20,7 +21,7 @@ public class CrawlerJob implements Job<HttpURL, List<String>, List<String>> {
 
 	public CrawlerJob(HttpURLImpl httpURLImpl) {
 		_url = httpURLImpl;
-		_task = new CrawlerTask(this);
+		_task = new CrawlerTask(this, new HashMap<HttpURL, Boolean>());
 	}
 
 	@Override
@@ -58,6 +59,11 @@ public class CrawlerJob implements Job<HttpURL, List<String>, List<String>> {
 	
 	public Pool<HttpURL> getArgPool() {
 		return _argPool;
+	}
+
+	public boolean alreadyCheckedURLs(HttpURL url) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
