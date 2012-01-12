@@ -10,6 +10,8 @@ import alpv.mwp.testOne.PowClient;
 public class Main {
 
 	private static final String DEFAULT_JOB = "crawler";
+	private static final String DEFAULT_HOST = "127.0.0.1";
+	private static final String DEFAULT_PORT = "31337";
 	private static final int DEFAULT_WORKERS = 4;
 
 	private static final String USAGE = String
@@ -89,7 +91,7 @@ public class Main {
 	private static void startAll() {
 		Thread server = new Thread(new Runnable() {
 			public void run() {
-				String[] args = { "server", "1337" };
+				String[] args = { "server", DEFAULT_PORT };
 				main(args);
 			}
 		});
@@ -100,7 +102,7 @@ public class Main {
 		}
 		Runnable runnableWorker = new Runnable() {
 			public void run() {
-				String[] args = { "worker", "127.0.0.1", "1337" };
+				String[] args = { "worker", DEFAULT_HOST, DEFAULT_PORT };
 				main(args);
 			}
 		};
@@ -115,7 +117,7 @@ public class Main {
 		}
 		Thread client = new Thread(new Runnable() {
 			public void run() {
-				String[] args = { "client", "127.0.0.1", "1337" };
+				String[] args = { "client", DEFAULT_HOST, DEFAULT_PORT };
 				main(args);
 			}
 		});
