@@ -1,7 +1,6 @@
 package alpv.mwp;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is nothing else then a java.util.concurrent.ArrayBlockingQueue.
@@ -10,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PoolFinishedImpl<T> extends PoolImpl<T> {
 
 	private int _workerCount;
-	private AtomicInteger _workerFinished;
+	private int _workerFinished;
 	
 	public PoolFinishedImpl() {
 		this(0);
@@ -19,13 +18,13 @@ public class PoolFinishedImpl<T> extends PoolImpl<T> {
 	public PoolFinishedImpl(int workerCount) {
 		super();
 		_workerCount = workerCount;
-		_workerFinished = new AtomicInteger();
+		_workerFinished = 0;
 	}
 	
 	@Override
-	public void put(T t) throws RemoteException {
+	public synchronized void put(T t) throws RemoteException {
+		_workerFinished = 0;
 		super.put(t);
-		_workerFinished.set(0);
 	}
 
 	/**
@@ -33,10 +32,10 @@ public class PoolFinishedImpl<T> extends PoolImpl<T> {
 	 * ArrayBlockingQueue.poll()}
 	 * Count hits if empty
 	 */
-	public T get() throws RemoteException {
+	public synchronized T get() throws RemoteException {
 		T result = super.get();
 		if(result == null) {
-			_workerFinished.incrementAndGet();
+			_workerFinished++;
 		}
 		return result;
 	}
@@ -46,8 +45,8 @@ public class PoolFinishedImpl<T> extends PoolImpl<T> {
 	 * ArrayBlockingQueue.size()}
 	 * Returns -1 if all workers are finished
 	 */
-	public int size() throws RemoteException {
-		if(_workerFinished != null && _workerFinished.get() >= _workerCount) {
+	public synchronized int size() throws RemoteException {
+		if(_workerFinished >= _workerCount) {
 			return -1;
 		}
 		return super.size();
