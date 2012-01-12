@@ -8,15 +8,16 @@ import java.rmi.RemoteException;
  */
 public class PoolFinishedImpl<T> extends PoolImpl<T> {
 
+	private static final long serialVersionUID = 661421034960737172L;
 	private int _workerCount;
 	private int _workerFinished;
 	private int _poisonCount;
 
-	public PoolFinishedImpl() {
+	public PoolFinishedImpl()  throws RemoteException {
 		this(0);
 	}
 
-	public PoolFinishedImpl(int workerCount) {
+	public PoolFinishedImpl(int workerCount) throws RemoteException {
 		super();
 		_workerCount = workerCount;
 		_workerFinished = 0;

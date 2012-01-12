@@ -19,19 +19,11 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 	private RayTask _task;
 	private RayRemoteFuture _remoteFuture;
 	private boolean _merging;
-	private PoolImpl<RayResult> _tempPool;
+	private Pool<RayResult> _tempPool;
 
 	public RayJob() throws RemoteException {
 		_task = new RayTask(this);
 		_merging = false;
-	}
-
-	// Create temp pool if needed
-	public PoolImpl<RayResult> getTempPool() {
-		if (_tempPool == null) {
-			_tempPool = new PoolImpl<RayResult>();
-		}
-		return _tempPool;
 	}
 
 	@Override
@@ -50,9 +42,9 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 				int lastSize = 0;
 				while (!_merging) {
 					try {
-						PoolImpl<RayResult> pool = getTempPool();
+						Pool<RayResult> pool = getTempPool();
 						if (pool.size() > lastSize) {
-							_remoteFuture.set(collect(pool, false));
+							getFuture().set(collect(pool, false));
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
@@ -72,7 +64,7 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 	@Override
 	public void merge(Pool<RayResult> resPool) {
 		_merging = true;
-		_remoteFuture.set(collect(resPool, true));
+		getFuture().set(collect(resPool, true));
 	}
 
 	private RayComplete collect(Pool<RayResult> resPool, boolean isFinished) {
@@ -96,9 +88,7 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 				if (!isFinished) {
 					resPool.put(result);
 				}
-				ByteArrayOutputStream outputStream = result.getStream();
-				outputStream.writeTo(baos);
-				outputStream.flush();
+				baos.write(result.getBytes());
 			}
 
 		} catch (IOException ex) {
@@ -116,6 +106,18 @@ public class RayJob implements Job<Integer, RayResult, RayComplete> {
 			}
 		}
 		return _remoteFuture;
+	}
+
+	// Create temp pool if needed
+	public Pool<RayResult> getTempPool() throws RemoteException {
+		if (_tempPool == null) {
+			try {
+				_tempPool = new PoolImpl<RayResult>();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		return _tempPool;
 	}
 
 	public RayTask getTask() {

@@ -1,17 +1,20 @@
 package alpv.mwp;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayDeque;
 
 /**
  * This is nothing else then a java.util.concurrent.ArrayBlockingQueue.
  * 
  */
-public class PoolImpl<T> implements Pool<T> {
+public class PoolImpl<T> extends UnicastRemoteObject implements Pool<T>, Serializable {
 
+	private static final long serialVersionUID = 8873794302531953182L;
 	protected final ArrayDeque<T> _queue;
 
-	public PoolImpl() {
+	public PoolImpl() throws RemoteException {
 		_queue = new ArrayDeque<T>();
 	}
 

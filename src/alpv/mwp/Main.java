@@ -12,7 +12,7 @@ public class Main {
 	private static final String DEFAULT_JOB = "crawler";
 	private static final String DEFAULT_HOST = "127.0.0.1";
 	private static final String DEFAULT_PORT = "31337";
-	private static final int DEFAULT_WORKERS = 4;
+	private static final int DEFAULT_WORKERS = 2;
 
 	private static final String USAGE = String
 			.format("usage: java -jar UB%%X_%%NAMEN server PORT NUMBER_OF_WORKERS%n"
@@ -107,9 +107,9 @@ public class Main {
 			}
 		};
 		Thread[] workers = new Thread[DEFAULT_WORKERS];
-		for(Thread worker : workers) {
-			worker = new Thread(runnableWorker);
-			worker.start();
+		for (int i = 0; i < workers.length; i++) {
+			workers[i] = new Thread(runnableWorker);
+			workers[i].start();
 		}
 		try {
 			Thread.sleep(500);
@@ -122,5 +122,18 @@ public class Main {
 			}
 		});
 		client.start();
+		
+		// Shutdown everthing
+		try {
+			while (client.isAlive()) {
+				Thread.sleep(500);
+			}
+			for (Thread worker : workers) {
+				worker.join();
+			}
+			System.exit(0);
+		} catch (InterruptedException e) {
+			// Ignore
+		}
 	}
 }

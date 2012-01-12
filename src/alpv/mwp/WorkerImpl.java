@@ -8,8 +8,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
-public class WorkerImpl implements Worker, Runnable, Serializable {
+public class WorkerImpl extends UnicastRemoteObject implements Worker, Runnable, Serializable {
 
 	private static final long serialVersionUID = -4483191034408758974L;
 	private final Master _master;

@@ -16,7 +16,6 @@ public class PowJob implements Job<Integer, Integer, Integer> {
 	public PowJob(Integer[] numbers) throws RemoteException {
 		_task = new PowTask();
 		_numbers = numbers;
-		_remoteFuture = new PowRemoteFuture();
 	}
 
 	@Override
@@ -31,6 +30,13 @@ public class PowJob implements Job<Integer, Integer, Integer> {
 	}
 	
 	public PowRemoteFuture getFuture() {
+		if(_remoteFuture == null) {
+			try {
+				_remoteFuture = new PowRemoteFuture();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 		return _remoteFuture;
 	}
 
@@ -46,7 +52,7 @@ public class PowJob implements Job<Integer, Integer, Integer> {
 			while ((i = resPool.get()) != null) {
 				result += i;
 			}
-			_remoteFuture.set(result);
+			getFuture().set(result);
 		} catch (RemoteException e) {
 			// ignore
 		}

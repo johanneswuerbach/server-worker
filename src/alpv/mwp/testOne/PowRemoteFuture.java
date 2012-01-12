@@ -2,17 +2,18 @@ package alpv.mwp.testOne;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import alpv.mwp.RemoteFuture;
 
-public class PowRemoteFuture implements
+public class PowRemoteFuture extends UnicastRemoteObject implements
 		RemoteFuture<Integer>, Serializable {
 
 	private static final long serialVersionUID = -3480527838775572272L;
 	Integer _returnObject;
 	boolean _ready;
 
-	public PowRemoteFuture() {
+	public PowRemoteFuture() throws RemoteException {
 		_returnObject = null;
 		_ready = false;
 	}
