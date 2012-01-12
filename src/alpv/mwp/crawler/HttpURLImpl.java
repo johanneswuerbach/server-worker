@@ -65,4 +65,9 @@ public class HttpURLImpl implements HttpURL, Serializable{
 		return _port;
 	}
 
+	@Override
+	public boolean equals(Object paramT) {
+		return (paramT instanceof HttpURL) && this.getHost().equals(((HttpURLImpl) paramT).getHost()) && this.getPath().equals(((HttpURLImpl) paramT).getPath());
+	}
+
 }

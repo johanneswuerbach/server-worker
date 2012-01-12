@@ -10,9 +10,9 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 
 	private static final long serialVersionUID = 3659366838266519515L;
 	private CrawlerJob _job;
-	private Map<HttpURL, Boolean> _checkedURLs;
+	private Map<String, Boolean> _checkedURLs;
 
-	public CrawlerTask(CrawlerJob job, Map<HttpURL, Boolean> checkedUrls) {
+	public CrawlerTask(CrawlerJob job, Map<String, Boolean> checkedUrls) {
 		_job = job;
 		_checkedURLs = checkedUrls;
 	}
@@ -21,12 +21,10 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 	public List<String> exec(HttpURL url) {
 		System.out.println("Task started. Parsing url: " + url.getHost()
 				+ url.getPath());
-		if (!_checkedURLs.containsKey(url)) {
-			URLParser parser = new URLParser(url);
+			URLParser parser = new URLParser(url, _checkedURLs);
 			for (HttpURL newUrl : parser.get_urls()) {
 				try {
 					_job.getArgPool().put(newUrl);
-					_checkedURLs.put(newUrl, true);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
@@ -34,9 +32,5 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 			System.out.println("Task finished (" + url.getHost()
 					+ url.getPath() + ")");
 			return parser.get_mailTos();
-		}else{
-			System.out.println("url already checked");
-			return null;
-		}
 	}
 }

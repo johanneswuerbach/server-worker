@@ -21,7 +21,7 @@ public class CrawlerJob implements Job<HttpURL, List<String>, List<String>> {
 
 	public CrawlerJob(HttpURLImpl httpURLImpl) {
 		_url = httpURLImpl;
-		_task = new CrawlerTask(this, new HashMap<HttpURL, Boolean>());
+		_task = new CrawlerTask(this, new HashMap<String, Boolean>());
 	}
 
 	@Override

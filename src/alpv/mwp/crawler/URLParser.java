@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,12 +17,13 @@ public class URLParser {
 	List<HttpURL> _urls;
 	List<String> _mailTos;
 	HttpURL _url;
+	private Map<String, Boolean> _checkedURLs;
 
-	public URLParser(HttpURL url) {
+	public URLParser(HttpURL url, Map<String, Boolean> checkedURLs) {
 
 		_urls = new ArrayList<HttpURL>();
 		_mailTos = new ArrayList<String>();
-
+		_checkedURLs = checkedURLs;
 		try {
 			_url = url;
 			_content = _url.openConnection().getContent();
@@ -35,12 +37,6 @@ public class URLParser {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		HttpURL url = new HttpURLImpl(
-				"http://www.fu-berlin.de/universitaet/was-uns-auszeichnet/nachwuchs/bsrt.html");
-		new URLParser(url);
-	}
-
 	private void parse(BufferedReader reader) throws IOException {
 		Pattern p = Pattern
 				.compile("href=(\"|')((http:[^\"']*)|(mailto:[^\"']*)|([^\"^:']*))(\"|')");
@@ -49,27 +45,38 @@ public class URLParser {
 		String url;
 
 		while ((line = reader.readLine()) != null) {
-//			System.out.println(line);
+			// System.out.println(line);
 			m = p.matcher(line);
 			while (m.find()) {
 				url = m.group(2);
 				if (url.startsWith("http")) {
-//					System.out.println("http url detected: " + url);
-					_urls.add(new HttpURLImpl(url));
+					addURL(url);
 				} else if (url.startsWith("mailto")) {
-//					System.out.println("mailto detected: " + url);
-					_mailTos.add(url);
+					addMailTo(url);
 				} else if (url.startsWith("#")) {
 					System.out.println("bad url detected: " + url);
 				} else if (url.startsWith("/")) {
-//					System.out.println("http://" + _url.getHost() + url);
-					_urls.add(new HttpURLImpl("http://" + _url.getHost() + url));
+					addURL("http://" + _url.getHost() + url);
 				} else {
-//					System.out.println("http://" + _url.getHost() + _url.getPath() + url);
-					_urls.add(new HttpURLImpl("http://" + _url.getHost()
-							+ _url.getPath() + url));
+					addURL("http://" + _url.getHost() + _url.getPath() + url);
 				}
 			}
+		}
+	}
+
+	private void addMailTo(String url) {
+		// System.out.println("mailto detected: " + url);
+		_mailTos.add(url);
+	}
+
+	private void addURL(String url) {
+		// System.out.println("http url detected: " + url);
+		if (!_checkedURLs.containsKey(url)) {
+			System.out.println(url + " not checked. Adding to argument pool");
+			_checkedURLs.put(url, null);
+			_urls.add(new HttpURLImpl(url));
+		}else{
+		System.out.println(url + " already checked.");
 		}
 	}
 
