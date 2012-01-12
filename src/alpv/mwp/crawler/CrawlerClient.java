@@ -17,7 +17,7 @@ public class CrawlerClient extends Client {
 
 	public void execute() throws RemoteException {
 		String url = "http://www.fu-berlin.de/einrichtungen";
-		Job<HttpURL, String, List<String>> job = new CrawlerJob(new HttpURLImpl(url));
+		Job<HttpURL, List<String>, List<String>> job = new CrawlerJob(new HttpURLImpl(url));
 		RemoteFuture<List<String>> remoteFuture = _server.doJob(job);
 		remoteFuture.get();
 	}

@@ -94,7 +94,7 @@ public class Main {
 			}
 		});
 		server.start();
-		try {Thread.sleep(100);} catch (InterruptedException e) {}
+		try {Thread.sleep(500);} catch (InterruptedException e) {}
 		Thread worker = new Thread(new Runnable() {
 			public void run() {
 				String[] args = {"worker", "127.0.0.1",  "1337"};
@@ -102,7 +102,7 @@ public class Main {
 			}
 		});
 		worker.start();
-		try {Thread.sleep(100);} catch (InterruptedException e) {}
+		try {Thread.sleep(500);} catch (InterruptedException e) {}
 		Thread client = new Thread(new Runnable() {
 			public void run() {
 				String[] args = {"client", "127.0.0.1",  "1337"};

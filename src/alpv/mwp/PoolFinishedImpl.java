@@ -21,6 +21,12 @@ public class PoolFinishedImpl<T> extends PoolImpl<T> {
 		_workerCount = workerCount;
 		_workerFinished = new AtomicInteger();
 	}
+	
+	@Override
+	public void put(T t) throws RemoteException {
+		super.put(t);
+		_workerFinished.set(0);
+	}
 
 	/**
 	 * See {@link java.util.concurrent.ArrayBlockingQueue#poll()

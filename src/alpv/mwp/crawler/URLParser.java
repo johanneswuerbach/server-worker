@@ -49,34 +49,25 @@ public class URLParser {
 		String url;
 
 		while ((line = reader.readLine()) != null) {
+//			System.out.println(line);
 			m = p.matcher(line);
 			while (m.find()) {
 				url = m.group(2);
 				if (url.startsWith("http")) {
-					System.out.println("http url detected: " + url);
+//					System.out.println("http url detected: " + url);
 					_urls.add(new HttpURLImpl(url));
 				} else if (url.startsWith("mailto")) {
-					System.out.println("mailto detected: " + url);
+//					System.out.println("mailto detected: " + url);
 					_mailTos.add(url);
+				} else if (url.startsWith("#")) {
+					System.out.println("bad url detected: " + url);
+				} else if (url.startsWith("/")) {
+//					System.out.println("http://" + _url.getHost() + url);
+					_urls.add(new HttpURLImpl("http://" + _url.getHost() + url));
 				} else {
-					if (url.startsWith("#")) {
-						System.out.println("bad url detected: " + url);
-					} else {
-						System.out.println("http url detected: " + url);
-						if (url.startsWith("/")) {
-							System.out
-									.println("http://" + _url.getHost() + url);
-							_urls.add(new HttpURLImpl("http://"
-									+ _url.getHost() + url));
-						} else {
-							System.out.println("http://" + _url.getHost()
-									+ _url.getPath() + url);
-							_urls.add(new HttpURLImpl("http://"
-									+ _url.getHost() + _url.getPath() + url));
-						}
-
-					}
-
+//					System.out.println("http://" + _url.getHost() + _url.getPath() + url);
+					_urls.add(new HttpURLImpl("http://" + _url.getHost()
+							+ _url.getPath() + url));
 				}
 			}
 		}

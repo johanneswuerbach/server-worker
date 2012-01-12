@@ -10,7 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class PoolImpl<T> implements Pool<T> {
 
 	protected final ArrayBlockingQueue<T> _queue;
-	protected final static int CAPACITY = 200;
+	protected final static int CAPACITY = 2000;
 	
 	public PoolImpl() {
 		_queue = new ArrayBlockingQueue<T>(CAPACITY);

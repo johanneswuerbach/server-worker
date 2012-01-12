@@ -16,6 +16,7 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 
 	@Override
 	public List<String> exec(HttpURL a) {
+		System.out.println("Task started. Parsing url: " + a.getHost() + a.getPath());
 		URLParser parser = new URLParser(a);
 		for (HttpURL url : parser.get_urls()) {
 			try {
@@ -24,6 +25,7 @@ public class CrawlerTask implements Task<HttpURL, List<String>> {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Task finished (" + a.getHost() + a.getPath() + ")");
 		return parser.get_mailTos();
 	}
 }
