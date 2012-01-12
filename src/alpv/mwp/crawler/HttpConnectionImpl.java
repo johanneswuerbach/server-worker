@@ -72,11 +72,20 @@ public class HttpConnectionImpl implements HttpConnection {
 				}
 			}
 		}
-
+		
 		if (dontParse) {
+			// Return only html based on Content-Type
 			socket.close();
 			_content = null;
 		} else {
+			// Solve slow reading bugs
+			if(inputStream.available() == 0) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// Ignore
+				}
+			}
 			_content = inputStream;
 		}
 	}

@@ -7,6 +7,9 @@ import java.util.Map;
 
 import alpv.mwp.Task;
 
+/**
+ * Parse an URL
+ */
 public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 
 	private static final int MAX_DEEP = 2;
@@ -32,6 +35,7 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 		try {
 			if (url.getDeep() <= MAX_DEEP) {
 				URLParser parser = new URLParser(url.getHttpUrl(), _checkedURLs);
+				// Reschedule results
 				for (HttpURL newUrl : parser.get_urls()) {
 					_job.getArgPool().put(
 							new CrawlerArgument(newUrl, url.getDeep() + 1,
@@ -42,6 +46,7 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 						+ url.getHttpUrl().getPath() + ")");
 				return parser.get_mailTos();
 			} else {
+				// Send poison
 				_job.getArgPool().put(
 						new CrawlerArgument(true));
 				return null;

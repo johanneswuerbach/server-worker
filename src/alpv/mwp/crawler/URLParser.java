@@ -72,6 +72,9 @@ public class URLParser {
 
 	private void addURL(String url) {
 		// System.out.println("http url detected: " + url);
+
+		url = sanitizeUrl(url);
+
 		if (!_checkedURLs.containsKey(url)) {
 			// System.out.println(url +
 			// " not checked. Adding to argument pool");
@@ -82,6 +85,26 @@ public class URLParser {
 				// drop this url
 			}
 		}
+	}
+
+	/**
+	 * Our method the remove some duplicates
+	 */
+	private String sanitizeUrl(String url) {
+		// Remove protocol
+		String protocol = url.substring(0, 7);
+		url = url.substring(7);
+
+		// Remove useless stuff
+		url = url.replaceAll("//", "/");
+		url = url.replaceAll("/\\./", "/");
+
+		// Remove folders bevor ../
+		while (url.contains("../")) {
+			String[] parts = url.split("/\\.\\.", 2);
+			url = parts[0].substring(0, parts[0].lastIndexOf('/')) + parts[1];
+		}
+		return protocol + url;
 	}
 
 	public List<HttpURL> get_urls() {

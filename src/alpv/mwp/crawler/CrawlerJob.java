@@ -8,7 +8,6 @@ import java.util.List;
 
 import alpv.mwp.Job;
 import alpv.mwp.Pool;
-import alpv.mwp.RemoteFuture;
 import alpv.mwp.Task;
 
 public class CrawlerJob implements
@@ -31,7 +30,7 @@ public class CrawlerJob implements
 	}
 
 	@Override
-	public RemoteFuture<List<String>> getFuture() {
+	public CrawlerRemoteFuture getFuture() {
 		if (_remoteFuture == null) {
 			try {
 				_remoteFuture = new CrawlerRemoteFuture();
@@ -53,11 +52,14 @@ public class CrawlerJob implements
 		}
 	}
 
+	/**
+	 * Merge all lists of mails to a list of unique mails
+	 */
 	@Override
 	public void merge(Pool<List<String>> resPool) {
 		List<String> unique_mails = new ArrayList<String>();
 		try {
-			System.out.println("Number of mails: " + resPool.size());
+			System.out.println("Number of lists: " + resPool.size());
 			List<String> mails;
 			while ((mails = resPool.get()) != null) {
 				for (String mail : mails) {
@@ -69,7 +71,7 @@ public class CrawlerJob implements
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		_remoteFuture.set(unique_mails);
+		getFuture().set(unique_mails);
 	}
 
 	public Pool<CrawlerArgument> getArgPool() {

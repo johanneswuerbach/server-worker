@@ -89,6 +89,7 @@ public class Main {
 	}
 
 	private static void startAll() {
+		
 		Thread server = new Thread(new Runnable() {
 			public void run() {
 				String[] args = { "server", DEFAULT_PORT };

@@ -7,6 +7,9 @@ import java.util.List;
 
 import alpv.mwp.RemoteFuture;
 
+/**
+ * Returns a list of unique mails
+ */
 public class CrawlerRemoteFuture extends UnicastRemoteObject implements
 		RemoteFuture<List<String>>, Serializable {
 

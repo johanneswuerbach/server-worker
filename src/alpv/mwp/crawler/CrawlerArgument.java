@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 import alpv.mwp.Poison;
 
+/**
+ * Objects for the argument pool
+ * Can be poisoned
+ */
 public final class CrawlerArgument implements Poison, Serializable {
 
 	private static final long serialVersionUID = 2991145631611186860L;

@@ -9,6 +9,9 @@ import alpv.mwp.Client;
 import alpv.mwp.Job;
 import alpv.mwp.RemoteFuture;
 
+/**
+ * Crawl a specific website for mails using master-worker
+ */
 public final class CrawlerClient extends Client {
 	
 	public CrawlerClient(String host, int port) throws RemoteException,
