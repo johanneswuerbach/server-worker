@@ -22,7 +22,10 @@ public class HttpConnectionImpl implements HttpConnection {
 //		System.out.println("Connect to: " + httpURL.getHost() + ":"
 //				+ httpURL.getPort());
 		
-		_content = socket.getInputStream();
+		// Receive response
+		InputStream inputStream = socket.getInputStream();
+		InputStreamReader reader = new InputStreamReader(
+						inputStream);
 
 		// Send request
 		String protocol = "HTTP/1.1";
@@ -33,14 +36,9 @@ public class HttpConnectionImpl implements HttpConnection {
 		outputStream.write(request.getBytes());
 		socket.shutdownOutput();
 		
-		InputStreamReader reader = new InputStreamReader(
-				_content);
-
 		// Parse response
-		String line;
-
 		// Parse status code
-		line = readLine(reader);
+		 String line = readLine(reader);
 //		System.out.println(line);
 		if (line != null) {
 			String[] parts = line.split(" ");
@@ -76,7 +74,11 @@ public class HttpConnectionImpl implements HttpConnection {
 		}
 		
 		if (dontParse) {
-			_content.close();
+			socket.close();
+			_content = null;
+		}
+		else {
+			_content = inputStream;
 		}
 	}
 	
