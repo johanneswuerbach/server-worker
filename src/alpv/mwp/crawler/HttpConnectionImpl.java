@@ -19,8 +19,8 @@ public class HttpConnectionImpl implements HttpConnection {
 			IOException {
 		Socket socket = new Socket(httpURL.getHost(), httpURL.getPort());
 
-		System.out.println("Connect to: " + httpURL.getHost() + ":"
-				+ httpURL.getPort());
+//		System.out.println("Connect to: " + httpURL.getHost() + ":"
+//				+ httpURL.getPort());
 		
 		_content = socket.getInputStream();
 
@@ -41,7 +41,7 @@ public class HttpConnectionImpl implements HttpConnection {
 
 		// Parse status code
 		line = readLine(reader);
-		System.out.println(line);
+//		System.out.println(line);
 		if (line != null) {
 			String[] parts = line.split(" ");
 			if (line.length() >= 2) {

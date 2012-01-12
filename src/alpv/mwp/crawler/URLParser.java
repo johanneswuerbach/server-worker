@@ -54,7 +54,7 @@ public class URLParser {
 				} else if (url.startsWith("mailto")) {
 					addMailTo(url);
 				} else if (url.startsWith("#")) {
-					System.out.println("bad url detected: " + url);
+//					System.out.println("bad url detected: " + url);
 				} else if (url.startsWith("/")) {
 					addURL("http://" + _url.getHost() + url);
 				} else {
@@ -66,17 +66,16 @@ public class URLParser {
 
 	private void addMailTo(String url) {
 		// System.out.println("mailto detected: " + url);
+		//TODO 
 		_mailTos.add(url);
 	}
 
 	private void addURL(String url) {
 		// System.out.println("http url detected: " + url);
 		if (!_checkedURLs.containsKey(url)) {
-			System.out.println(url + " not checked. Adding to argument pool");
+//			System.out.println(url + " not checked. Adding to argument pool");
 			_checkedURLs.put(url, null);
 			_urls.add(new HttpURLImpl(url));
-		}else{
-		System.out.println(url + " already checked.");
 		}
 	}
 
