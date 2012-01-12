@@ -22,8 +22,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	private final Registry _registry;
 	private final List<Worker> _workers;
 
-	public MasterServerImpl(int port)
-			throws RemoteException {
+	public MasterServerImpl(int port) throws RemoteException {
 		System.out.println("Server: init");
 		_registry = LocateRegistry.createRegistry(port);
 		_registry.rebind(NAME, this);
@@ -41,7 +40,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	private void run() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
-//			System.out.println("running");
+			// System.out.println("running");
 			try {
 				String line = br.readLine();
 				if (line != null) {
@@ -82,7 +81,8 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 	public <Argument, Result, ReturnObject> RemoteFuture<ReturnObject> doJob(
 			final Job<Argument, Result, ReturnObject> job)
 			throws RemoteException {
-		final PoolFinishedImpl<Argument> argumentPool = new PoolFinishedImpl<Argument>(_workers.size());
+		final PoolFinishedImpl<Argument> argumentPool = new PoolFinishedImpl<Argument>(
+				_workers.size());
 		job.split(argumentPool, _workers.size());
 		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
 		System.out.println("Server: Start job. Workers: " + _workers.size());
@@ -95,7 +95,8 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			public void run() {
 				try {
 					while (argumentPool.size() != -1) {
-						// System.out.println("Server: Arguments left: " + argumentPool.size());
+						// System.out.println("Server: Arguments left: " +
+						// argumentPool.size());
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {

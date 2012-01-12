@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 public class PoolImpl<T> implements Pool<T> {
 
 	protected final ArrayDeque<T> _queue;
-	
+
 	public PoolImpl() {
 		_queue = new ArrayDeque<T>();
 	}
@@ -34,8 +34,7 @@ public class PoolImpl<T> implements Pool<T> {
 
 	/**
 	 * See {@link java.util.concurrent.ArrayBlockingQueue#size()
-	 * ArrayBlockingQueue.size()}
-	 * Returns -1 if all workers are finished
+	 * ArrayBlockingQueue.size()} Returns -1 if all workers are finished
 	 */
 	public synchronized int size() throws RemoteException {
 		return _queue.size();

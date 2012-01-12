@@ -9,6 +9,7 @@ import alpv.mwp.Task;
 
 public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 
+	private static final int MAX_DEEP = 2;
 	private static final long serialVersionUID = 3659366838266519515L;
 	private CrawlerJob _job;
 	private Map<String, Boolean> _checkedURLs;
@@ -20,19 +21,29 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 
 	@Override
 	public List<String> exec(CrawlerArgument url) {
+		// Ignore poison
+		if (url.isPoison()) {
+			return null;
+		}
+		
 		System.out.println("Task started. Parsing url: "
 				+ url.getHttpUrl().getHost() + url.getHttpUrl().getPath()
 				+ " Deep: " + url.getDeep());
 		try {
-			if (url.getDeep() <= 1) {
+			if (url.getDeep() <= MAX_DEEP) {
 				URLParser parser = new URLParser(url.getHttpUrl(), _checkedURLs);
 				for (HttpURL newUrl : parser.get_urls()) {
-					_job.getArgPool().put(new CrawlerArgument(newUrl, url.getDeep() + 1,false));
+					_job.getArgPool().put(
+							new CrawlerArgument(newUrl, url.getDeep() + 1,
+									false));
 				}
-				System.out.println("Task finished ("+ url.getHttpUrl().getHost()+ url.getHttpUrl().getPath() + ")");
+				System.out.println("Task finished ("
+						+ url.getHttpUrl().getHost()
+						+ url.getHttpUrl().getPath() + ")");
 				return parser.get_mailTos();
 			} else {
-				_job.getArgPool().put(new CrawlerArgument("http://foo.bar",url.getDeep() + 1, true));
+				_job.getArgPool().put(
+						new CrawlerArgument(true));
 				return null;
 			}
 		} catch (RemoteException e) {

@@ -16,6 +16,13 @@ public final class CrawlerArgument implements Poison, Serializable {
 			throws IOException {
 		this(new HttpURLImpl(url), deep, isPoison);
 	}
+	
+	public CrawlerArgument(boolean isPoison)
+			throws IOException {
+		_httpUrl = null;
+		_deep = 0;
+		_isPoison = isPoison;
+	}
 
 	public CrawlerArgument(HttpURL url, int deep, boolean isPoison) {
 		_httpUrl = url;

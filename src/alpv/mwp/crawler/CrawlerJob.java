@@ -10,7 +10,6 @@ import alpv.mwp.Job;
 import alpv.mwp.Pool;
 import alpv.mwp.RemoteFuture;
 import alpv.mwp.Task;
-import alpv.mwp.ray.RayRemoteFuture;
 
 public class CrawlerJob implements
 		Job<CrawlerArgument, List<String>, List<String>> {
@@ -56,27 +55,24 @@ public class CrawlerJob implements
 
 	@Override
 	public void merge(Pool<List<String>> resPool) {
-		List<String> result = new ArrayList<String>();
+		List<String> unique_mails = new ArrayList<String>();
 		try {
-			for (String s : resPool.get()) {
-				if(!result.contains(s)){
-					System.out.println(s);
-					result.add(s);
+			System.out.println("Number of mails: " + resPool.size());
+			List<String> mails;
+			while ((mails = resPool.get()) != null) {
+				for (String mail : mails) {
+					if (!unique_mails.contains(mail)) {
+						unique_mails.add(mail);
+					}
 				}
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		_remoteFuture.set(result);
+		_remoteFuture.set(unique_mails);
 	}
 
 	public Pool<CrawlerArgument> getArgPool() {
 		return _argPool;
 	}
-
-	public boolean alreadyCheckedURLs(HttpURL url) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }
