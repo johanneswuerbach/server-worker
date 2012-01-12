@@ -27,7 +27,7 @@ public class URLParser {
 		try {
 			_url = url;
 			_content = _url.openConnection().getContent();
-			if (_content.available() > 0) {
+			if (_content != null && _content.available() > 0) {
 				BufferedReader contentReader = new BufferedReader(
 						new InputStreamReader(_content));
 				parse(contentReader);
