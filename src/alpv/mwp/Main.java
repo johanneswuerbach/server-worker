@@ -10,6 +10,7 @@ import alpv.mwp.testOne.PowClient;
 public class Main {
 
 	private static final String DEFAULT_JOB = "crawler";
+	private static final int DEFAULT_WORKERS = 4;
 
 	private static final String USAGE = String
 			.format("usage: java -jar UB%%X_%%NAMEN server PORT NUMBER_OF_WORKERS%n"
@@ -103,10 +104,11 @@ public class Main {
 				main(args);
 			}
 		};
-		Thread worker1 = new Thread(runnableWorker);
-		worker1.start();
-		Thread worker2 = new Thread(runnableWorker);
-		worker2.start();
+		Thread[] workers = new Thread[DEFAULT_WORKERS];
+		for(Thread worker : workers) {
+			worker = new Thread(runnableWorker);
+			worker.start();
+		}
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
