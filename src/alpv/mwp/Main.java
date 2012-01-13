@@ -12,7 +12,7 @@ public class Main {
 	private static final String DEFAULT_JOB = "crawler";
 	private static final String DEFAULT_HOST = "127.0.0.1";
 	private static final String DEFAULT_PORT = "31337";
-	private static final int DEFAULT_WORKERS = 2;
+	private static final int DEFAULT_WORKERS = 4;
 
 	private static final String USAGE = String
 			.format("usage: java -jar UB%%X_%%NAMEN server PORT NUMBER_OF_WORKERS%n"
@@ -32,8 +32,8 @@ public class Main {
 		try {
 			int i = 0;
 			if (args.length == 0) {
-				// startAll();
-				System.err.println(USAGE);
+				startAll();
+				// System.err.println(USAGE);
 			} else if (args[i].equals("server")) {
 				new MasterServerImpl(Integer.parseInt(args[++i]));
 			} else if (args[i].equals("client")) {

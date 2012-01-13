@@ -11,7 +11,7 @@ import alpv.mwp.Task;
  */
 public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 
-	private static final int MAX_DEEP = 2;
+	private static final int MAX_DEEP = 1;
 	private static final long serialVersionUID = 3659366838266519515L;
 	private CrawlerJob _job;
 	private History<String> _checkedURLs;
@@ -23,11 +23,6 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 
 	@Override
 	public List<String> exec(CrawlerArgument url) {
-		// Ignore poison
-		if (url.isPoison()) {
-			return null;
-		}
-		
 		System.out.println("Task started. Parsing url: "
 				+ url.getHttpUrl().getHost() + url.getHttpUrl().getPath()
 				+ " Deep: " + url.getDeep());
@@ -46,6 +41,7 @@ public class CrawlerTask implements Task<CrawlerArgument, List<String>> {
 				return parser.get_mailTos();
 			} else {
 				// Send poison
+				System.out.println("Send poison.");
 				_job.getArgPool().put(
 						new CrawlerArgument(true));
 				return null;

@@ -62,12 +62,13 @@ public class URLParser {
 				}
 			}
 		}
+		reader.close();
 	}
 
 	private void addMailTo(String url) {
 		// System.out.println("mailto detected: " + url);
 		String[] parts = url.split("\\?", 2);
-		_mailTos.add(parts[0]);
+		_mailTos.add(parts[0].substring(7));
 	}
 
 	private void addURL(String url) {
@@ -102,15 +103,27 @@ public class URLParser {
 		// Remove useless stuff
 		url = url.replaceAll("//", "/");
 		url = url.replaceAll("/\\./", "/");
-
+		
 		// Remove folders bevor ../
 		while (url.contains("../")) {
-			String[] parts = url.split("/\\.\\.", 2);
-			int index;
-			if ((index = parts[0].lastIndexOf('/')) > 0) {
-				url = parts[0].substring(0, index) + parts[1];
+			String[] parts = url.split("\\.\\./", 2);
+			// fu-berlin.de/schulungen/e-teaching/index.html../../aktuelles/gml2012_call.html
+			if(!parts[0].endsWith("/")) {
+				parts[0] = parts[0].substring(0, parts[0].lastIndexOf('/'));
+			}
+			else {
+				// Remove last slash
+				parts[0] = parts[0].substring(0, parts[0].length() - 1); 
+			}
+			// Create new url
+			if(!parts[0].contains("/")) {
+				url = parts[0] + "/" + parts[1];	
+			}
+			else {
+				url = parts[0].substring(0, parts[0].lastIndexOf('/') + 1) + parts[1]; 
 			}
 		}
+		
 		return protocol + url;
 	}
 

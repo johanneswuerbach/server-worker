@@ -82,7 +82,7 @@ public class MasterServerImpl extends UnicastRemoteObject implements Master,
 			final Job<Argument, Result, ReturnObject> job)
 			throws RemoteException {
 		final PoolFinishedImpl<Argument> argumentPool = new PoolFinishedImpl<Argument>(
-				_workers);
+				_workers.size());
 		job.split(argumentPool, _workers.size());
 		final PoolImpl<Result> resultPool = new PoolImpl<Result>();
 		System.out.println("Server: Start job. Workers: " + _workers.size());

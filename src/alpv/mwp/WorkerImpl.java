@@ -75,18 +75,17 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker,
 			try {
 				while (_isRunning && _argumentPool.size() != -1) {
 					Argument argument = _argumentPool.get();
-					if (argument == null) {
-						// Wait for more new arguments
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					} else {
-						
+					if (argument != null ) {
 						Result result = _task.exec(argument);
 						if (result != null) {
 							_resultPool.put(result);
+						}
+					} else if(argument instanceof Poison) {
+						// Wait for more new arguments
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
 						}
 					}
 				}

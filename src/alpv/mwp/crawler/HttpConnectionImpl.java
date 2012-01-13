@@ -38,7 +38,6 @@ public class HttpConnectionImpl implements HttpConnection {
 		// Parse response
 		// Parse status code
 		String line = readLine(reader);
-		// System.out.println(line);
 		if (line != null) {
 			String[] parts = line.split(" ");
 			if (line.length() >= 2) {
